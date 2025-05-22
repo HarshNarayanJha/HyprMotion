@@ -1,2 +1,23 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin '@tailwindcss/typography';
+
+@theme {
+  --color-hyprland: #00cfff;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+.bg-grid {
+  --grid-lines-color: #12121223;
+
+  background-size: 40px 40px;
+  background-image: linear-gradient(
+      to right,
+      var(--grid-lines-color) 1px,
+      transparent 1px
+    ), linear-gradient(to bottom, var(--grid-lines-color) 1px, transparent 1px);
+
+  mask-image: linear-gradient(to bottom, white, transparent 45%);
+}
