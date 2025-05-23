@@ -6,8 +6,30 @@
   --color-debug: #ff0080;
 }
 
-html {
-  @apply scroll-smooth;
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  section {
+    @apply mb-16;
+  }
+
+  input[type="text"] {
+    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
+  }
+
+  textarea {
+    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
+  }
+
+  input[type="file"] {
+    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
+  }
+
+  button {
+    @apply disabled:opacity-35 disabled:bg-cyan-100 disabled:cursor-not-allowed transition-opacity;
+  }
 }
 
 .bg-grid {

@@ -1,13 +1,18 @@
 <script lang="ts">
 import ConfigImport from "./ConfigImport.svelte"
 
-let configImported = $state(false)
+let config = $state<string>("")
+
+let configImported = $derived(config !== "")
 </script>
 
-<section class="min-h-svh w-full bg-green-500">
+<section class="min-h-svh w-full">
   {#if configImported}
     Let's play with the config
+    <pre>
+      {config}
+    </pre>
   {:else}
-    <ConfigImport />
+    <ConfigImport bind:config />
   {/if}
 </section>
