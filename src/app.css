@@ -3,6 +3,7 @@
 
 @theme {
   --color-hyprland: #00cfff;
+  --color-debug: #ff0080;
 }
 
 html {
