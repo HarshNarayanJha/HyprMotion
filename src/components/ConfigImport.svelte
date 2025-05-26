@@ -1,4 +1,7 @@
 <script lang="ts">
+import Icon from "@iconify/svelte"
+import TransparentDivider from "./reusable/TransparentDivider.svelte"
+
 let { config = $bindable("") }: { config: string } = $props()
 
 let configText = $state<string>("")
@@ -58,10 +61,7 @@ const resetForm = () => {
     ></textarea>
   </div>
 
-  <div
-    class="m-auto h-64 min-h-[1em] w-px self-stretch bg-gradient-to-tr from-transparent
-    via-neutral-500 to-transparent opacity-25 dark:via-neutral-400"
-  ></div>
+  <TransparentDivider vertical={true} heightClass={"h-[70%]"} />
 
   <div class="m-auto p-8">
     <h2 class="text-xl font-semibold">Import from file</h2>
@@ -72,25 +72,76 @@ const resetForm = () => {
     </p>
 
     <div class="flex flex-row items-center gap-4">
-      <input
-        bind:files={configFiles}
-        disabled={configFilesDisabled}
-        class="border-debug my-8 border p-4 disabled:hover:ring-0"
-        type="file"
-        accept=".conf"
-        multiple={false}
-      />
-
-      <button
-        class="h-8 w-8 rounded-md bg-red-500 font-bold"
-        type="button"
-        onclick={resetForm}>X</button
-      >
+      <div class="my-4 grid w-full content-center">
+        <label
+          for="dropzone-file"
+          class="flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed {configFilesDisabled
+            ? 'cursor-not-allowed border-gray-300/50 bg-gray-100/50 opacity-45'
+            : 'cursor-pointer  border-gray-300 bg-gray-100 hover:bg-gray-200'}"
+        >
+          {#if !configFiles || configFiles.length === 0}
+            <div class="pb-6 pt-5">
+              <Icon
+                icon="material-symbols:upload-file"
+                class="m-auto mb-4 h-8 w-8 text-gray-500"
+              />
+              <p class="mb-2 text-center text-sm text-gray-500">
+                <span class="font-semibold">Click to upload</span>
+                <!-- -- or drag and drop -->
+              </p>
+              <p class="text-xs text-gray-500">
+                Hyprland .conf files only (max 10KiB)
+              </p>
+            </div>
+          {:else}
+            <div class="pb-6 pt-5">
+              <div class="flex flex-col items-center justify-center">
+                <Icon
+                  icon="lucide:file-check"
+                  class="mb-4 h-10 w-10 text-green-500"
+                />
+                <p class="mb-1 text-sm font-semibold text-gray-700">
+                  File loaded successfully!
+                </p>
+                <p class="mb-2 text-sm font-medium text-gray-600">
+                  {configFiles.item(0)?.name}
+                </p>
+                <p class="text-xs text-gray-500">
+                  {Math.round(((configFiles.item(0)?.size || 0) / 1024) * 100) /
+                    100} KB
+                </p>
+                <div class="mt-3 rounded-lg px-3 py-2">
+                  <p class="text-center text-xs text-gray-600">
+                    Loaded by mistake? Don't worry — <span class="font-semibold"
+                      >click again</span
+                    > to load another
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onclick={resetForm}
+                  class="mt-2 rounded-md bg-red-600 px-3 py-1 text-sm font-medium text-white hover:bg-red-500 active:bg-red-400"
+                >
+                  <Icon icon="mdi:file-remove" class="inline-block h-5 w-5" />
+                  Remove File
+                </button>
+              </div>
+            </div>
+          {/if}
+          <input
+            bind:files={configFiles}
+            disabled={configFilesDisabled}
+            id="dropzone-file"
+            type="file"
+            class="hidden"
+            accept=".conf"
+            multiple={false}
+          />
+        </label>
+      </div>
     </div>
 
-    <hr
-      class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400"
-    />
+    <TransparentDivider />
 
     <h2 class="text-xl font-semibold">Insert file URI</h2>
     <p class="prose prose-sm">
