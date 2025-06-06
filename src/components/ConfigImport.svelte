@@ -1,20 +1,24 @@
 <script lang="ts">
 import { goto } from "$app/navigation"
+import { Button } from "$lib/components/ui/button"
+import { Input } from "$lib/components/ui/input"
+import { Label } from "$lib/components/ui/label"
+import { Textarea } from "$lib/components/ui/textarea"
 import { parseConfigFromText, parseConfigFromURL } from "$lib/configParser"
 import { config } from "$lib/global.svelte"
 import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
 
 let configText = $state<string>("")
-let configFiles: FileList | null = $state<FileList | null>(null)
+let configFiles: FileList | undefined = $state<FileList | undefined>(undefined)
 let configUrl = $state<string>("")
 
 let configTextDisabled = $derived(
-  (configFiles != null && configFiles.length > 0) || configUrl !== "",
+  (configFiles !== undefined && configFiles.length > 0) || configUrl !== "",
 )
 let configFilesDisabled = $derived(configText !== "" || configUrl !== "")
 let configUrlDisabled = $derived(
-  configText !== "" || (configFiles != null && configFiles.length > 0),
+  configText !== "" || (configFiles !== undefined && configFiles.length > 0),
 )
 
 let formElement = $state<HTMLFormElement | null>(null)
@@ -72,15 +76,16 @@ const resetForm = () => {
       exactly one
       <code>animations</code> block
     </p>
-    <textarea
+    <Textarea
       bind:value={configText}
       disabled={configTextDisabled}
+      placeholder="Paste your hyprland config..."
       name="configText"
       id="configText"
-      class="my-4 rounded-lg border border-neutral-800/20 p-2 ring-0 ring-blue-600/50 hover:ring disabled:hover:ring-0"
-      rows="15"
-      cols="30"
-    ></textarea>
+      class="my-4 rounded-lg border border-neutral-800/20 p-4 ring-0 ring-blue-600/50 hover:ring disabled:hover:ring-0"
+      rows={15}
+      cols={30}
+    />
   </div>
 
   <TransparentDivider vertical={true} heightClass={"h-[70%]"} />
@@ -95,7 +100,7 @@ const resetForm = () => {
 
     <div class="flex flex-row items-center gap-4">
       <div class="my-4 grid w-full content-center">
-        <label
+        <Label
           for="dropzone-file"
           class="flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed {configFilesDisabled
             ? 'cursor-not-allowed border-gray-300/50 bg-gray-100/50 opacity-45'
@@ -150,7 +155,7 @@ const resetForm = () => {
               </div>
             </div>
           {/if}
-          <input
+          <Input
             bind:files={configFiles}
             disabled={configFilesDisabled}
             id="dropzone-file"
@@ -159,7 +164,7 @@ const resetForm = () => {
             accept=".conf"
             multiple={false}
           />
-        </label>
+        </Label>
       </div>
     </div>
 
@@ -171,7 +176,7 @@ const resetForm = () => {
       containing exactly one
       <code>animations</code> block. Can be a GitHub URI or a direct file URI
     </p>
-    <input
+    <Input
       bind:value={configUrl}
       disabled={configUrlDisabled}
       class="my-4 rounded-lg border border-neutral-800/20 p-2 ring-0 ring-blue-600/50 hover:ring disabled:hover:ring-0"
@@ -181,9 +186,12 @@ const resetForm = () => {
     <!-- pattern="^[http|https]://.*\.conf" -->
   </div>
 
-  <button
-    class="bg-hyprland col-span-3 m-auto rounded-lg px-4 py-2 font-medium ring-2 ring-cyan-100 active:ring-cyan-300 disabled:ring-0"
+  <Button
+    class="bg-hyprland hover:bg-hyprland/50 col-span-3 m-auto rounded-lg px-4 py-2 font-medium ring-2 ring-cyan-100 active:ring-cyan-300 disabled:ring-0"
+    variant="secondary"
     disabled={!configTextDisabled && !configUrlDisabled && !configFilesDisabled}
-    type="submit">Start Visualizing</button
+    type="submit"
   >
+    Start Visualizing
+  </Button>
 </form>
