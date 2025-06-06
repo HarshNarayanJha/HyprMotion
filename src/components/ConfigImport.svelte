@@ -1,8 +1,10 @@
 <script lang="ts">
+import { parseConfigFromText, parseConfigFromURL } from "$lib/configParser"
+import type { ParsedAnimations } from "$lib/parser"
 import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
 
-let { config = $bindable("") }: { config: string } = $props()
+let { config = $bindable(null) }: { config: ParsedAnimations | null } = $props()
 
 let configText = $state<string>("")
 let configFiles: FileList | null = $state<FileList | null>(null)
@@ -23,13 +25,30 @@ const submitConfig = async (
 ) => {
   e.preventDefault()
   if (configTextDisabled && configUrlDisabled && configFiles) {
-    config = (await configFiles.item(0)?.text()) ?? ""
+    const text = await configFiles.item(0)?.text()
+    const parsedConfig = parseConfigFromText(text ?? "")
+    if (parsedConfig === null) {
+      resetForm()
+      return
+    }
+    config = parsedConfig
   } else if (configTextDisabled && configFilesDisabled) {
-    config = await (await fetch(configUrl)).text()
+    const parsedConfig = await parseConfigFromURL(configUrl)
+    if (parsedConfig === null) {
+      resetForm()
+      return
+    }
+    config = parsedConfig
   } else if (configUrlDisabled && configFilesDisabled) {
-    config = configText
+    const parsedConfig = parseConfigFromText(configText)
+    if (parsedConfig === null) {
+      resetForm()
+      return
+    }
+    config = parsedConfig
   } else {
-    config = "Error"
+    resetForm()
+    return
   }
 }
 
