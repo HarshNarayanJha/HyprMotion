@@ -1,7 +1,7 @@
 <script>
+import ConfigImport from "../components/ConfigImport.svelte"
 import Hero from "../components/Hero.svelte"
-import Playground from "../components/Playground.svelte"
 </script>
 
 <Hero />
-<Playground />
+<ConfigImport />

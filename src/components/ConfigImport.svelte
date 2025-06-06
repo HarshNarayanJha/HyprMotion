@@ -1,10 +1,9 @@
 <script lang="ts">
+import { goto } from "$app/navigation"
 import { parseConfigFromText, parseConfigFromURL } from "$lib/configParser"
-import type { ParsedAnimations } from "$lib/parser"
+import { config } from "$lib/global.svelte"
 import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
-
-let { config = $bindable(null) }: { config: ParsedAnimations | null } = $props()
 
 let configText = $state<string>("")
 let configFiles: FileList | null = $state<FileList | null>(null)
@@ -31,21 +30,25 @@ const submitConfig = async (
       resetForm()
       return
     }
-    config = parsedConfig
+    config.animations = parsedConfig.animations
+    config.beziers = parsedConfig.beziers
+    goto("/playground")
   } else if (configTextDisabled && configFilesDisabled) {
     const parsedConfig = await parseConfigFromURL(configUrl)
     if (parsedConfig === null) {
       resetForm()
       return
     }
-    config = parsedConfig
+    // config.animations = parsedConfig.
   } else if (configUrlDisabled && configFilesDisabled) {
     const parsedConfig = parseConfigFromText(configText)
     if (parsedConfig === null) {
       resetForm()
       return
     }
-    config = parsedConfig
+    config.animations = parsedConfig.animations
+    config.beziers = parsedConfig.beziers
+    goto("/playground")
   } else {
     resetForm()
     return
