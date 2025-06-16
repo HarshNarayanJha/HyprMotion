@@ -17,7 +17,7 @@ const instructions = [
 ]
 </script>
 
-<div class="container mx-auto my-8 grid grid-cols-3 grid-rows-1 gap-8 px-48 py-36">
+<div class="mx-auto xl:my-8 grid grid-cols-3 grid-rows-1 gap-8 px-16 xl:px-48 py-36">
   {#each instructions as inst}
     <InstructionCard icon={inst.icon} text={inst.text} />
   {/each}

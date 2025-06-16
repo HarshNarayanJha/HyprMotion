@@ -65,7 +65,7 @@ const resetForm = () => {
 </script>
 
 <form
-  class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 px-24"
+  class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 xl:px-24"
   onsubmit={submitConfig}
   bind:this={formElement}
 >
