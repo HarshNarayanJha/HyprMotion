@@ -116,3 +116,8 @@ export type Animation =
   | WindowsAnimation
   | LayersAnimation
   | WorkspacesAnimation
+
+export type HyprMotionConfig = {
+  animations: Animation[] | null
+  beziers: Bezier[] | null
+}

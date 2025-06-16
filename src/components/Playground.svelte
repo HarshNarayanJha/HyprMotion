@@ -1,13 +1,11 @@
 <script lang="ts">
-import { browser } from "$app/environment"
-import { goto } from "$app/navigation"
-import { config } from "$lib/global.svelte"
+import type { HyprMotionConfig } from "$lib/types"
 
-// if (config.animations === null || config.beziers === null) {
-//   if (browser) {
-//     goto("/")
-//   }
-// }
+interface PlaygroundProps {
+  config: HyprMotionConfig
+}
+
+let { config }: PlaygroundProps = $props()
 </script>
 
 <section class="min-h-svh w-full">

@@ -1,9 +1,9 @@
-import type { Animation, Bezier } from "$lib/types"
+import type { Animation, Bezier, HyprMotionConfig } from "$lib/types"
 
 let animations = $state<Animation[] | null>(null)
 let beziers = $state<Bezier[] | null>(null)
 
-export const config = {
+export const config: HyprMotionConfig = {
   get animations() {
     return animations
   },
