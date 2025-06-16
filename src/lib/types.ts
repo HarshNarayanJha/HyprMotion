@@ -30,6 +30,33 @@ export type AnimationName =
   | "specialWorkspaceIn"
   | "specialWorkspaceOut"
 
+export const animationNames = [
+  "windows",
+  "windowsIn",
+  "windowsOut",
+  "windowsMove",
+  "layers",
+  "layersIn",
+  "layersOut",
+  "fade",
+  "fadeIn",
+  "fadeOut",
+  "fadeSwitch",
+  "fadeShadow",
+  "fadeDim",
+  "fadeLayers",
+  "fadeLayersIn",
+  "fadeLayersOut",
+  "border",
+  "borderangle",
+  "workspaces",
+  "workspacesIn",
+  "workspacesOut",
+  "specialWorkspace",
+  "specialWorkspaceIn",
+  "specialWorkspaceOut",
+]
+
 export interface Bezier {
   name: string
   x0: number

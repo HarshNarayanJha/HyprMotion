@@ -1,4 +1,5 @@
 <script lang="ts">
+import { Skeleton } from "$lib/components/ui/skeleton"
 import type { HyprMotionConfig } from "$lib/types"
 
 interface PlaygroundProps {
@@ -8,7 +9,9 @@ interface PlaygroundProps {
 let { config }: PlaygroundProps = $props()
 </script>
 
-<section class="min-h-svh w-full">
-  {config.animations?.length}
-  {config.beziers?.length}
-</section>
+<main class="w-full max-h-[85svh] h-full">
+  <!-- {config.animations?.length}
+  {config.beziers?.length} -->
+  <!-- <Skeleton class="h-[80%] w-[80%] m-auto" /> -->
+  <Skeleton class="h-[80%] w-[80%] m-auto" />
+</main>
