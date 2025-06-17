@@ -74,6 +74,7 @@ type BaseStyle =
   | "slidefade"
   | "slidefadevert"
 
+export type SpeedUnit = "ds" | "ms" | "s"
 type SlideDirection = "left" | "right" | "top" | "bottom"
 type PopinPercentage = `${number}%`
 type SlideFadePercentage = `${number}%`
@@ -90,6 +91,7 @@ interface AnimationBase {
   onoff: boolean
   speed?: number
   curve?: "default" | Bezier
+  style?: Style | null
 }
 
 interface AnimationWithoutStyle extends AnimationBase {
@@ -105,6 +107,7 @@ interface AnimationWithoutStyle extends AnimationBase {
     | "fadeLayersOut"
     | "border"
     | "borderangle"
+  style?: null
 }
 
 interface WindowsAnimation extends AnimationBase {

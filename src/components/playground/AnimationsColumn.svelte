@@ -30,38 +30,6 @@ let { animations = $bindable(null) }: AnimationsColumnProps = $props()
           <AnimationCollapsible {an} />
         {/each}
       </div>
-      <!-- {#if animations && animations.length > 0}
-        <div class="space-y-4">
-          {#each animations as an}
-            <div class="px-2 py-2">
-              <InlineInput
-                value={an.name}
-                inputClasses="border-input bg-background selection:bg-primary dark:bg-input/30 shadow-xs selection:text-primary-foreground ring-offset-background flex h-6 w-full min-w-0 rounded-md border px-2 py-3 text-base outline-none transition-[color,box-shadow]"
-                labelClasses="font-medium"
-                maxLength={32}
-              >
-                {#snippet postLabel(onclick: () => void)}
-                  <Icon
-                    icon="fe:edit"
-                    class="inline"
-                    width={12}
-                    height={16}
-                    {onclick}
-                  />
-                {/snippet}
-              </InlineInput>
-            </div>
-          {/each}
-        </div>
-      {:else}
-        <div class="my-16 space-y-4 text-center text-sm">
-          <p>No Animations defined in config</p>
-          <Button size="sm">
-            <Icon icon="material-symbols:add-circle" />
-            Add
-          </Button>
-        </div>
-      {/if} -->
     </Card.Content>
     <Card.Footer>
       <p class="text-xs">
