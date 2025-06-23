@@ -5,51 +5,102 @@ import { Input } from "$lib/components/ui/input"
 import { Label } from "$lib/components/ui/label"
 import * as Select from "$lib/components/ui/select"
 import { Switch } from "$lib/components/ui/switch"
-import type { Animation, Bezier, SpeedUnit } from "$lib/types"
+import * as Tooltip from "$lib/components/ui/tooltip"
+import type { StyleParams } from "$lib/data"
+import type { Animation, Bezier, SpeedUnit, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
 import { slide } from "svelte/transition"
 
 interface AnimationCollapsibleProps {
   an: string
-  animation?: Animation | null
+  description: string
+  styles: string[] | null
+  styleParams: Record<string, StyleParams> | null
+  animation: Animation | null
   beziers: Bezier[]
 }
+
 let {
   an,
+  description,
+  styles = null,
+  styleParams = null,
   animation = $bindable(null),
   beziers,
 }: AnimationCollapsibleProps = $props()
 
-let open = $state(false)
-let enabled = $derived(animation?.onoff ?? true)
-let speed = $derived(animation?.speed ?? 0)
+const formatStyleParam = (s: string, p: string | number): Style => {
+  let _p = p
+
+  if (typeof _p === "number") {
+    _p = `${p}%`
+  }
+
+  if (["left", "right", "top", "bottom"].includes(_p))
+    return `slide ${p}` as Style
+
+  return `${s} ${p}`.trim() as Style
+}
+
+let enabled = $state(animation?.onoff || false)
+let open = $derived(enabled)
+
+let speed = $state(animation?.speed || 10)
 let speedUnit = $state<SpeedUnit>("ds")
-let curve = $derived(animation?.curve?.toString() ?? "default")
-let style: string | null = $derived(animation?.style?.toString() ?? null)
 
-let curveTriggerContent = $derived(curve || "Select a curve...")
-
-$effect(() => {
-  // close if disabled and do not allow opening again
-  if (!enabled && open) {
-    open = false
-  }
-
-  // if just enabled, open up
-  if (enabled) {
-    open = true
-  }
-
-  // propagate changes up
-  if (animation) {
-    animation.onoff = enabled
-    animation.speed = speed
-    // animation.curve = curve
-    // animation.style = style
+let speedValue = $derived.by(() => {
+  switch (speedUnit) {
+    case "ms":
+      return 0.01 * speed
+    case "s":
+      return 10 * speed
+    case "ds":
+      return speed
   }
 })
 
-let beziersBuiltIn = [{ name: "default" }]
+const _animationCurve =
+  animation?.curve === "default" ? "default" : animation?.curve?.name
+let curve = $state(_animationCurve)
+
+let style = $state(animation?.style?.toString().split(" ")[0])
+let styleParam = $derived.by(() => {
+  let st = animation?.style?.toString().trim()
+  if (!st) return undefined
+
+  const parts = st.split(" ")
+  if (parts.length < 2) {
+    return undefined
+  }
+
+  const param = parts[1]
+  if (param.endsWith("%")) {
+    return Number.parseInt(param)
+  }
+
+  return param
+})
+
+let curveTriggerContent = $derived(curve || "Select...")
+let styleTriggerContent = $derived(style || "Select...")
+let styleParamTriggerContent = $derived(styleParam?.toString() || "Select...")
+
+$effect(() => {
+  // propagate changes up
+  if (animation) {
+    animation.onoff = enabled
+    animation.speed = speedValue
+    animation.curve = beziers.find(b => b.name === curve) || "default"
+    if (style !== undefined && styleParam !== undefined) {
+      animation.style = formatStyleParam(style, styleParam)
+    } else {
+      animation.style = undefined
+    }
+  }
+})
+
+const beziersBuiltIn = [{ name: "default" }]
+const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
 </script>
 
 <Collapsible.Root class="space-y0 w-full" {open}>
@@ -60,15 +111,27 @@ let beziersBuiltIn = [{ name: "default" }]
       class: "flex w-full flex-row items-center justify-between gap-2 px-2",
     })}
   >
-    <button
-      class="inline-block w-full cursor-pointer text-start font-medium disabled:bg-inherit"
-      onclick={() => (open = enabled ? !open : false)}
-      disabled={!enabled}
-      type="button"
-    >
-      {an}
-    </button>
+    <!-- Animation Name -->
+    <Tooltip.Provider delayDuration={100}>
+      <Tooltip.Root>
+        <Tooltip.Trigger
+          type="button"
+          role="button"
+          class="w-full cursor-pointer text-start font-medium disabled:bg-inherit"
+          onclick={() => (open = enabled ? !open : false)}
+          disabled={!enabled}
+        >
+          {an}
+        </Tooltip.Trigger>
+        <Tooltip.Content>
+          <p>
+            {description || "No Description"}
+          </p>
+        </Tooltip.Content>
+      </Tooltip.Root>
+    </Tooltip.Provider>
 
+    <!-- Onoff switch -->
     <Switch
       class="ml-auto mr-2"
       id="{an}-enabled"
@@ -86,8 +149,12 @@ let beziersBuiltIn = [{ name: "default" }]
       <span class="sr-only">Toggle</span>
     </button>
   </div>
+
   {#if open}
-    <div class="rounded-md bg-neutral-50/75 p-4" transition:slide>
+    <div
+      class="rounded-md bg-neutral-50/75 p-4"
+      transition:slide={{ duration: 200 }}
+    >
       <Collapsible.Content>
         <div class="grid grid-cols-[1fr_2fr] gap-2">
           <!-- Speed Input -->
@@ -113,7 +180,7 @@ let beziersBuiltIn = [{ name: "default" }]
                 {speedUnit}
               </Select.Trigger>
               <Select.Content>
-                {#each ["ds", "ms", "s"] as su}
+                {#each speedUnits as su}
                   <Select.Item value={su} label={su}>
                     {su}
                   </Select.Item>
@@ -149,31 +216,87 @@ let beziersBuiltIn = [{ name: "default" }]
           </Select.Root>
 
           <!-- Style Selector -->
-          {#if animation?.style}
+          {#if styles && styles.length > 0}
             <Label for="{an}-style">Style</Label>
-            <Select.Root type="single" name="{an}-style" bind:value={style}>
+            <Select.Root
+              type="single"
+              name="{an}-style"
+              bind:value={style}
+              onValueChange={(val: string) => {
+                if (!styleParams) return
+
+                if (!val) {
+                  style = undefined
+                  styleParam = undefined
+                }
+
+                const sParams = styleParams[val]
+                if (!sParams) return
+
+                if (sParams.type == "percentage") styleParam = 20
+                else if (sParams.type == "select")
+                  styleParam = sParams.options![0]
+              }}
+            >
               <Select.Trigger class="w-full">
-                {curveTriggerContent}
+                {styleTriggerContent}
               </Select.Trigger>
               <Select.Content>
-                <Select.Group>
-                  <Select.Label>User defined beziers</Select.Label>
-                  {#each beziers as bz (bz.name)}
-                    <Select.Item value={bz.name} label={bz.name}>
-                      {bz.name}
-                    </Select.Item>
-                  {/each}
-                </Select.Group>
-                <Select.Group>
-                  <Select.Label>Built In</Select.Label>
-                  {#each beziersBuiltIn as bz (bz.name)}
-                    <Select.Item value={bz.name} label={bz.name}>
-                      {bz.name}
-                    </Select.Item>
-                  {/each}
-                </Select.Group>
+                <Select.Item value={""} label={"none"}>
+                  {"none"}
+                </Select.Item>
+                {#each styles as st}
+                  <Select.Item value={st} label={st}>
+                    {st}
+                  </Select.Item>
+                {/each}
               </Select.Content>
             </Select.Root>
+
+            {#if styleParams && style && styleParams[style]}
+              <Label for="{an}-styleparam">Style Options</Label>
+              {@const sParams = styleParams[style]}
+              {#if sParams.type === "select"}
+                <Select.Root
+                  type="single"
+                  name="{an}-styleparam"
+                  bind:value={styleParam as string}
+                >
+                  <Select.Trigger class="w-full">
+                    {styleParamTriggerContent}
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value={""} label={"auto"}>auto</Select.Item>
+                    {#each sParams.options! as spOp}
+                      <Select.Item value={spOp} label={spOp}>
+                        {spOp}
+                      </Select.Item>
+                    {/each}
+                  </Select.Content>
+                </Select.Root>
+              {:else if sParams.type === "percentage"}
+                <div class="relative flex">
+                  <Input
+                    class="pr-16 text-center"
+                    type="number"
+                    id="{an}-styleparam"
+                    name="{an}-styleparam"
+                    min={0}
+                    max={100}
+                    defaultValue={sParams.default!}
+                    bind:value={styleParam as number}
+                  />
+                  <div
+                    class="absolute right-0 top-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center"
+                  >
+                    %
+                  </div>
+                </div>
+                <p class="prose col-span-2 text-end text-xs">
+                  {sParams.description!}
+                </p>
+              {/if}
+            {/if}
           {:else}
             <p class="text-muted-foreground col-span-2 w-full text-xs">
               This animation does not supports styles
