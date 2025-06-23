@@ -85,6 +85,8 @@ export type Style =
   | `popin ${PopinPercentage}`
   | `slidefade ${SlideFadePercentage}`
   | `slidefadevert ${SlideFadePercentage}`
+  | "once"
+  | "loop"
 
 interface AnimationBase {
   name: AnimationName
@@ -106,8 +108,12 @@ interface AnimationWithoutStyle extends AnimationBase {
     | "fadeLayersIn"
     | "fadeLayersOut"
     | "border"
-    | "borderangle"
   style?: null
+}
+
+interface BorderAngleAnimation extends AnimationBase {
+  name: "borderangle"
+  style?: "once" | "loop"
 }
 
 interface WindowsAnimation extends AnimationBase {
@@ -143,6 +149,7 @@ interface WorkspacesAnimation extends AnimationBase {
 
 export type Animation =
   | AnimationWithoutStyle
+  | BorderAngleAnimation
   | WindowsAnimation
   | LayersAnimation
   | WorkspacesAnimation

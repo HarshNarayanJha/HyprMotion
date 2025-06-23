@@ -23,5 +23,5 @@ import { config } from "$lib/global.svelte"
 
   <Playground {config} />
 
-  <AnimationsColumn animations={config.animations} />
+  <AnimationsColumn animations={config.animations} beziers={config.beziers || []} />
 </div>

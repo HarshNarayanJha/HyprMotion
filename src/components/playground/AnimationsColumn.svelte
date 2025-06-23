@@ -1,21 +1,36 @@
 <script lang="ts">
 import AnimationCollapsible from "$components/reusable/AnimationCollapsible.svelte"
-import InlineInput from "$components/reusable/InlineInput.svelte"
-import { Button, buttonVariants } from "$lib/components/ui/button"
 import * as Card from "$lib/components/ui/card"
-import * as Collapsible from "$lib/components/ui/collapsible"
-import { Input } from "$lib/components/ui/input"
-import { Label } from "$lib/components/ui/label"
 import { Separator } from "$lib/components/ui/separator"
-import { Switch } from "$lib/components/ui/switch"
-import { type Animation, animationNames } from "$lib/types"
+import { animationGroups } from "$lib/data"
+import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
 
 interface AnimationsColumnProps {
   animations: Animation[] | null
+  beziers: Bezier[]
 }
 
-let { animations = $bindable(null) }: AnimationsColumnProps = $props()
+let { animations = $bindable(null), beziers }: AnimationsColumnProps = $props()
+
+const getStylesForAnimation = (
+  an: string,
+  styles: Style[] | Record<AnimationName, Style[]> | undefined,
+) => {
+  if (!styles) {
+    return null
+  }
+
+  if (Array.isArray(styles)) {
+    return styles
+  }
+
+  return styles[an as AnimationName]
+}
+
+const getAnimation = (an: string) => {
+  return animations?.find(animation => animation.name === an) || null
+}
 </script>
 
 <aside id="animations">
@@ -25,9 +40,33 @@ let { animations = $bindable(null) }: AnimationsColumnProps = $props()
       <Separator class="my-2" />
     </Card.Header>
     <Card.Content>
-      <div class="space-y-2">
-        {#each animationNames as an}
-          <AnimationCollapsible {an} />
+      <div class="space-y-6">
+        {#each Object.entries(animationGroups) as [_, anGroup]}
+          <div class="space-y-2">
+            <div class="flex flex-row items-center gap-2">
+              <Icon
+                icon={anGroup.icon || "material-symbols:animation"}
+                width={22}
+                height={22}
+                class="inline"
+                inline={true}
+              />
+              <span class="font-semibold tracking-wide">{anGroup.title}</span>
+            </div>
+            {#each Object.entries(anGroup.animations) as [an, description]}
+              {@const styles = getStylesForAnimation(an, anGroup.styles)}
+              {@const animation = getAnimation(an)}
+
+              <AnimationCollapsible
+                {an}
+                {animation}
+                {description}
+                {styles}
+                styleParams={anGroup.styleParams || null}
+                {beziers}
+              />
+            {/each}
+          </div>
         {/each}
       </div>
     </Card.Content>
