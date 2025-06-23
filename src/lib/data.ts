@@ -1,7 +1,7 @@
 import type { AnimationName, Style } from "./types"
 
 export interface StyleParams {
-  type: string
+  type: "select" | "percentage"
   options?: string[]
   default?: number
   description?: string

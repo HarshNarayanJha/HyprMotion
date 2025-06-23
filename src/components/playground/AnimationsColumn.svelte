@@ -7,11 +7,11 @@ import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
 
 interface AnimationsColumnProps {
-  animations: Animation[] | null
+  animations: Animation[]
   beziers: Bezier[]
 }
 
-let { animations = $bindable(null), beziers }: AnimationsColumnProps = $props()
+let { animations = $bindable([]), beziers }: AnimationsColumnProps = $props()
 
 const getStylesForAnimation = (
   an: string,
@@ -29,7 +29,14 @@ const getStylesForAnimation = (
 }
 
 const getAnimation = (an: string) => {
-  return animations?.find(animation => animation.name === an) || null
+  return animations.find(animation => animation.name === an) || null
+}
+
+const setAnimation = (an: string, anim: Animation) => {
+  const index = animations.findIndex(animation => animation.name === an)
+  if (index !== undefined && index !== -1 && animations) {
+    animations[index] = anim
+  }
 }
 </script>
 
@@ -55,11 +62,15 @@ const getAnimation = (an: string) => {
             </div>
             {#each Object.entries(anGroup.animations) as [an, description]}
               {@const styles = getStylesForAnimation(an, anGroup.styles)}
-              {@const animation = getAnimation(an)}
 
               <AnimationCollapsible
                 {an}
-                {animation}
+                bind:animation={
+                  () => getAnimation(an),
+                  (anim) => {
+                    if (anim) setAnimation(an, anim)
+                  }
+                }
                 {description}
                 {styles}
                 styleParams={anGroup.styleParams || null}

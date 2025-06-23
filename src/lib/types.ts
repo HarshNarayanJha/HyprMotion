@@ -93,7 +93,7 @@ interface AnimationBase {
   onoff: boolean
   speed?: number
   curve?: "default" | Bezier
-  style?: Style | null
+  style?: Style
 }
 
 interface AnimationWithoutStyle extends AnimationBase {
@@ -108,7 +108,6 @@ interface AnimationWithoutStyle extends AnimationBase {
     | "fadeLayersIn"
     | "fadeLayersOut"
     | "border"
-  style?: null
 }
 
 interface BorderAngleAnimation extends AnimationBase {
