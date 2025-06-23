@@ -3,27 +3,27 @@
   "version": "0.0.1",
   "devDependencies": {
     "@iconify/svelte": "^5.0.0",
-    "@internationalized/date": "^3.8.1",
+    "@internationalized/date": "^3.8.2",
     "@lucide/svelte": "^0.515.0",
-    "@sveltejs/adapter-auto": "^6.0.0",
-    "@sveltejs/kit": "^2.16.0",
-    "@sveltejs/vite-plugin-svelte": "^5.0.0",
-    "@tailwindcss/typography": "^0.5.15",
-    "@tailwindcss/vite": "^4.0.0",
-    "bits-ui": "^2.8.6",
+    "@sveltejs/adapter-auto": "^6.0.1",
+    "@sveltejs/kit": "^2.22.0",
+    "@sveltejs/vite-plugin-svelte": "^5.1.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.10",
+    "bits-ui": "^2.8.8",
     "clsx": "^2.1.1",
     "formsnap": "^2.0.1",
-    "mode-watcher": "^1.0.6",
-    "svelte": "^5.0.0",
-    "svelte-check": "^4.0.0",
-    "svelte-sonner": "^1.0.1",
-    "sveltekit-superforms": "^2.19.1",
-    "tailwind-merge": "^3.0.2",
+    "mode-watcher": "^1.0.8",
+    "svelte": "^5.34.7",
+    "svelte-check": "^4.2.2",
+    "svelte-sonner": "^1.0.5",
+    "sveltekit-superforms": "^2.27.0",
+    "tailwind-merge": "^3.3.1",
     "tailwind-variants": "^1.0.0",
-    "tailwindcss": "^4.0.0",
+    "tailwindcss": "^4.1.10",
     "tw-animate-css": "^1.3.4",
-    "typescript": "^5.0.0",
-    "vite": "^6.2.6"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "private": true,
   "scripts": {
@@ -34,5 +34,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
-  "type": "module"
+  "type": "module",
+  "trustedDependencies": [
+    "@tailwindcss/oxide"
+  ]
 }
