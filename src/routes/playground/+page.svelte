@@ -6,6 +6,7 @@ import TransparentDivider from "$components/reusable/TransparentDivider.svelte"
 
 import { config } from "$lib/global.svelte"
 
+// TODO: Show a dialog to create a new animation config
 // if (config.animations === null || config.beziers === null) {
 //   if (browser) {
 //     goto("/")
@@ -17,11 +18,14 @@ import { config } from "$lib/global.svelte"
 <TransparentDivider />
 
 <div
-  class="grid grid-cols-[1fr_2fr_1fr] gap-1 xl:grid-cols-[1fr_3fr_1fr] xl:gap-2 justify-items-stretch items-start"
+  class="grid grid-cols-[1fr_2fr_1fr] items-start justify-items-stretch gap-0 xl:grid-cols-[1fr_3fr_1fr] xl:gap-0"
 >
   <BeziersColumn beziers={config.beziers} />
 
   <Playground {config} />
 
-  <AnimationsColumn animations={config.animations || []} beziers={config.beziers || []} />
+  <AnimationsColumn
+    animations={config.animations || []}
+    beziers={config.beziers || []}
+  />
 </div>
