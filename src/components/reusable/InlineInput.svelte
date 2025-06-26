@@ -10,6 +10,7 @@ interface InlineInputProps {
   required?: boolean
   maxLength: number
   postLabel?: Snippet<[() => void]>
+  onSubmit?: (newValue: string) => void
 }
 
 let {
@@ -20,6 +21,7 @@ let {
   required = true,
   maxLength,
   postLabel,
+  onSubmit,
 }: InlineInputProps = $props()
 
 let value = $state(initialValue)
@@ -35,7 +37,7 @@ const edit = () => {
 
 const submit = () => {
   if (value !== original) {
-    dispatchEvent(new CustomEvent("submit", { detail: value }))
+    onSubmit?.(value)
   }
   editing = false
 }

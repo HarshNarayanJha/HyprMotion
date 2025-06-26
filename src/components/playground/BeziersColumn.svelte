@@ -32,6 +32,7 @@ let { beziers = $bindable(null) }: BeziersColumnProps = $props()
                 inputClasses="border-input bg-background selection:bg-primary dark:bg-input/30 shadow-xs selection:text-primary-foreground ring-offset-background flex h-6 w-full min-w-0 rounded-md border px-2 py-3 text-base outline-none transition-[color,box-shadow]"
                 labelClasses="font-medium"
                 maxLength={32}
+                onSubmit={(newName: string) => bz.name = newName}
               >
                 {#snippet postLabel(onclick: () => void)}
                   <Icon
