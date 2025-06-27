@@ -1,41 +1,54 @@
 <script lang="ts">
 import AnimationCollapsible from "$components/reusable/AnimationCollapsible.svelte"
+import { Button } from "$lib/components/ui/button"
 import * as Card from "$lib/components/ui/card"
 import { Separator } from "$lib/components/ui/separator"
 import { animationGroups } from "$lib/data"
 import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
+import Page from "../../routes/playground/+page.svelte"
 
 interface AnimationsColumnProps {
-  animations: Animation[]
-  beziers: Bezier[]
+  animations: Animation[] | null
+  beziers: Bezier[] | null
+  onCreateNewConfig?: () => void
 }
 
-let { animations = $bindable([]), beziers }: AnimationsColumnProps = $props()
+let {
+  animations = $bindable(null),
+  beziers,
+  onCreateNewConfig,
+}: AnimationsColumnProps = $props()
 
 const getStylesForAnimation = (
   an: string,
   styles: Style[] | Record<AnimationName, Style[]> | undefined,
 ) => {
-  if (!styles) {
-    return null
-  }
-
-  if (Array.isArray(styles)) {
-    return styles
-  }
-
+  if (!styles) return null
+  if (Array.isArray(styles)) return styles
   return styles[an as AnimationName]
 }
 
-const getAnimation = (an: string) => {
+const getAnimation = (an: string): Animation | null => {
+  if (animations === null) return null
+
   return animations.find(animation => animation.name === an) || null
 }
 
-const setAnimation = (an: string, anim: Animation) => {
-  const index = animations.findIndex(animation => animation.name === an)
-  if (index !== undefined && index !== -1 && animations) {
-    animations[index] = anim
+const setAnimation = (an: string, anim: Animation | null) => {
+  console.log(`Setting ${an} to ${anim}`)
+  if (animations === null) return
+
+  const index = animations.findIndex(x => x.name === an)
+
+  if (anim !== null) {
+    if (index !== -1) {
+      animations[index] = anim
+    } else {
+      animations.push(anim)
+    }
+  } else {
+    animations.splice(index, 1)
   }
 }
 </script>
@@ -48,37 +61,44 @@ const setAnimation = (an: string, anim: Animation) => {
     </Card.Header>
     <Card.Content>
       <div class="space-y-6">
-        {#each Object.entries(animationGroups) as [_, anGroup]}
-          <div class="space-y-2">
-            <div class="flex flex-row items-center gap-2">
-              <Icon
-                icon={anGroup.icon || "material-symbols:animation"}
-                width={22}
-                height={22}
-                class="inline"
-                inline={true}
-              />
-              <span class="font-semibold tracking-wide">{anGroup.title}</span>
-            </div>
-            {#each Object.entries(anGroup.animations) as [an, description]}
-              {@const styles = getStylesForAnimation(an, anGroup.styles)}
+        {#if animations !== null && beziers !== null}
+          {#each Object.entries(animationGroups) as [_, anGroup]}
+            <div class="space-y-2">
+              <div class="flex flex-row items-center gap-2">
+                <Icon
+                  icon={anGroup.icon || "material-symbols:animation"}
+                  width={22}
+                  height={22}
+                  class="inline"
+                  inline={true}
+                />
+                <span class="font-semibold tracking-wide">{anGroup.title}</span>
+              </div>
+              {#each Object.entries(anGroup.animations) as [an, description]}
+                {@const styles = getStylesForAnimation(an, anGroup.styles)}
 
-              <AnimationCollapsible
-                {an}
-                bind:animation={
-                  () => getAnimation(an),
-                  (anim) => {
-                    if (anim) setAnimation(an, anim)
+                <AnimationCollapsible
+                  {an}
+                  bind:animation={
+                    () => getAnimation(an), (anim) => setAnimation(an, anim)
                   }
-                }
-                {description}
-                {styles}
-                styleParams={anGroup.styleParams || null}
-                {beziers}
-              />
-            {/each}
+                  {description}
+                  {styles}
+                  styleParams={anGroup.styleParams || null}
+                  beziers={beziers || []}
+                />
+              {/each}
+            </div>
+          {/each}
+        {:else}
+          <div class="my-16 space-y-4 text-center text-sm">
+            <p>No config loaded</p>
+            <Button size="sm" onclick={() => onCreateNewConfig?.()}>
+              <Icon icon="material-symbols:add-circle" />
+              Create New
+            </Button>
           </div>
-        {/each}
+        {/if}
       </div>
     </Card.Content>
     <Card.Footer>

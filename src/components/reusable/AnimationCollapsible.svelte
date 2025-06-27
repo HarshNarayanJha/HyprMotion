@@ -7,7 +7,13 @@ import * as Select from "$lib/components/ui/select"
 import { Switch } from "$lib/components/ui/switch"
 import * as Tooltip from "$lib/components/ui/tooltip"
 import type { StyleParams } from "$lib/data"
-import type { Animation, Bezier, SpeedUnit, Style } from "$lib/types"
+import type {
+  Animation,
+  AnimationName,
+  Bezier,
+  SpeedUnit,
+  Style,
+} from "$lib/types"
 import Icon from "@iconify/svelte"
 import { slide } from "svelte/transition"
 
@@ -63,6 +69,10 @@ const _animationCurve =
   animation?.curve === "default" ? "default" : animation?.curve?.name
 let curve = $state(_animationCurve)
 
+let curveValue: Bezier | "default" = $derived(
+  beziers.find(b => b.name === curve) || "default",
+)
+
 let style = $state(animation?.style?.toString().split(" ")[0])
 let styleParam = $derived.by(() => {
   let st = animation?.style?.toString().trim()
@@ -81,21 +91,51 @@ let styleParam = $derived.by(() => {
   return param
 })
 
+let handleStyleChange = (val: string) => {
+  if (!styleParams) return
+
+  if (!val) {
+    style = undefined
+    styleParam = undefined
+  }
+
+  const sParams = styleParams[val]
+  if (!sParams) return
+
+  if (sParams.type === "percentage") styleParam = 20
+  else if (sParams.type === "select") styleParam = sParams.options?.[0]
+}
+
 let curveTriggerContent = $derived(curve || "Select...")
 let styleTriggerContent = $derived(style || "Select...")
 let styleParamTriggerContent = $derived(styleParam?.toString() || "Select...")
 
 $effect(() => {
   // propagate changes up
-  if (animation) {
-    animation.onoff = enabled
-    animation.speed = speedValue
-    animation.curve = beziers.find(b => b.name === curve) || "default"
-    if (style !== undefined && styleParam !== undefined) {
-      animation.style = formatStyleParam(style, styleParam)
+
+  if (enabled) {
+    if (!animation) {
+      animation = {
+        name: an as AnimationName,
+        onoff: true,
+        speed: speedValue,
+        curve: curveValue,
+        style:
+          style && styleParam ? formatStyleParam(style, styleParam) : undefined,
+      } as Animation
     } else {
-      animation.style = undefined
+      // animation.name = an as AnimationName
+      animation.onoff = true
+      animation.speed = speedValue
+      animation.curve = curveValue
+      if (style !== undefined && styleParam !== undefined) {
+        animation.style = formatStyleParam(style, styleParam)
+      } else {
+        animation.style = undefined
+      }
     }
+  } else {
+    animation = null
   }
 })
 
@@ -112,16 +152,19 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
     })}
   >
     <!-- Animation Name -->
-    <Tooltip.Provider delayDuration={100}>
+    <Tooltip.Provider delayDuration={50}>
       <Tooltip.Root>
         <Tooltip.Trigger
           type="button"
           role="button"
-          class="w-full cursor-pointer text-start font-medium disabled:bg-inherit"
           onclick={() => (open = enabled ? !open : false)}
-          disabled={!enabled}
         >
-          {an}
+          <span
+            class="w-full cursor-pointer text-start font-medium {!enabled &&
+              'text-muted-foreground bg-inherit'}"
+          >
+            {an}
+          </span>
         </Tooltip.Trigger>
         <Tooltip.Content>
           <p>
@@ -202,6 +245,10 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                   <Select.Item value={bz.name} label={bz.name}>
                     {bz.name}
                   </Select.Item>
+                {:else}
+                  <Select.Label class="ml-2 text-xs"
+                    >None Defined yet</Select.Label
+                  >
                 {/each}
               </Select.Group>
               <Select.Group>
@@ -222,21 +269,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               type="single"
               name="{an}-style"
               bind:value={style}
-              onValueChange={(val: string) => {
-                if (!styleParams) return
-
-                if (!val) {
-                  style = undefined
-                  styleParam = undefined
-                }
-
-                const sParams = styleParams[val]
-                if (!sParams) return
-
-                if (sParams.type == "percentage") styleParam = 20
-                else if (sParams.type == "select")
-                  styleParam = sParams.options![0]
-              }}
+              onValueChange={handleStyleChange}
             >
               <Select.Trigger class="w-full">
                 {styleTriggerContent}
@@ -254,8 +287,9 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
             </Select.Root>
 
             {#if styleParams && style && styleParams[style]}
-              <Label for="{an}-styleparam">Style Options</Label>
+              <Label for="{an}-styleparam">Extras</Label>
               {@const sParams = styleParams[style]}
+
               {#if sParams.type === "select"}
                 <Select.Root
                   type="single"

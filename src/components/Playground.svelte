@@ -9,9 +9,18 @@ interface PlaygroundProps {
 let { config }: PlaygroundProps = $props()
 </script>
 
-<main class="w-full max-h-[85svh] h-full">
-  <!-- {config.animations?.length}
-  {config.beziers?.length} -->
+<main class="h-full max-h-[85svh] w-full">
+  {#if config.animations !== null}
+    {#each config.animations as anim}
+      <div>
+        <span>{anim.name}</span>
+        <span>{anim.onoff}</span>
+        <span>{anim.speed}</span>
+        <span>{anim.curve}</span>
+        <span>{anim.style}</span>
+      </div>
+    {/each}
+  {/if}
   <!-- <Skeleton class="h-[80%] w-[80%] m-auto" /> -->
-  <Skeleton class="h-[80%] w-[80%] m-auto" />
+  <!-- <Skeleton class="h-[80%] w-[80%] m-auto" /> -->
 </main>

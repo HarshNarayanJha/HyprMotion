@@ -10,9 +10,11 @@ import Icon from "@iconify/svelte"
 
 interface BeziersColumnProps {
   beziers: Bezier[] | null
+  onCreateNewConfig?: () => void
 }
 
-let { beziers = $bindable(null) }: BeziersColumnProps = $props()
+let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
+  $props()
 </script>
 
 <aside id="beziers">
@@ -22,7 +24,7 @@ let { beziers = $bindable(null) }: BeziersColumnProps = $props()
       <Separator class="my-2" />
     </Card.Header>
     <Card.Content>
-      {#if beziers && beziers.length > 0}
+      {#if beziers !== null && beziers.length > 0}
         <div class="space-y-4">
           {#each beziers as bz}
             <!-- Beziers Input Group -->
@@ -32,7 +34,7 @@ let { beziers = $bindable(null) }: BeziersColumnProps = $props()
                 inputClasses="border-input bg-background selection:bg-primary dark:bg-input/30 shadow-xs selection:text-primary-foreground ring-offset-background flex h-6 w-full min-w-0 rounded-md border px-2 py-3 text-base outline-none transition-[color,box-shadow]"
                 labelClasses="font-medium"
                 maxLength={32}
-                onSubmit={(newName: string) => bz.name = newName}
+                onSubmit={(newName: string) => (bz.name = newName)}
               >
                 {#snippet postLabel(onclick: () => void)}
                   <Icon
@@ -84,12 +86,20 @@ let { beziers = $bindable(null) }: BeziersColumnProps = $props()
             </div>
           {/each}
         </div>
-      {:else}
+      {:else if beziers !== null && beziers.length == 0}
         <div class="my-16 space-y-4 text-center text-sm">
           <p>No Bezier curves defined in config</p>
           <Button size="sm">
             <Icon icon="material-symbols:add-circle" />
             Add
+          </Button>
+        </div>
+      {:else}
+        <div class="my-16 space-y-4 text-center text-sm">
+          <p>No config loaded</p>
+          <Button size="sm" onclick={() => onCreateNewConfig?.()}>
+            <Icon icon="material-symbols:add-circle" />
+            Create New
           </Button>
         </div>
       {/if}
