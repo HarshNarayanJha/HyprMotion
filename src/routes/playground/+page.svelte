@@ -7,6 +7,7 @@ import TransparentDivider from "$components/reusable/TransparentDivider.svelte"
 import { Button } from "$lib/components/ui/button"
 import * as Dialog from "$lib/components/ui/dialog"
 import { config } from "$lib/global.svelte"
+import type { AnimationName } from "$lib/types"
 
 let showDialog = $state(!config.configLoaded)
 
@@ -18,6 +19,24 @@ const createNewConfig = () => {
 
 const showCreateNewConfigDialog = () => {
   showDialog = true
+}
+
+// it's better to use ids probably
+const onBezierNameChange = (oldName: string, newName: string) => {
+  if (oldName === newName || !config.animations || !config.beziers) return
+
+  Object.entries(config.animations).forEach(([an, anim]) => {
+    if (
+      config.animations &&
+      config.beziers &&
+      anim.curve &&
+      anim.curve !== "default" &&
+      anim.curve.name === oldName
+    ) {
+      // biome-ignore lint/style/noNonNullAssertion: It literally exists since I use Objects.entries
+      config.animations[an as AnimationName]!.curve = config.beziers[newName]
+    }
+  })
 }
 
 // $inspect(config.animations).with(console.log)
@@ -39,25 +58,32 @@ const showCreateNewConfigDialog = () => {
   <BeziersColumn
     bind:beziers={config.beziers}
     onCreateNewConfig={showCreateNewConfigDialog}
+    {onBezierNameChange}
   />
 
   <!-- <div>
     {#if config.animations !== null}
-      {#each Object.values(config.animations) as anim}
+      {#each Object.entries(config.animations) as [an, anim]}
         <div>
+          <span>{an}</span>
           <span>{anim.name}</span>
           <span>{anim.onoff} </span>
           <span>{anim.speed}</span>
-          <span>{anim.curve} </span>
+          <span>
+            {anim.curve === "default" ? "default" : anim.curve?.name}
+          </span>
           <span>{anim.style}</span>
         </div>
       {/each}
     {:else}
       No Animations
     {/if}
+    <hr />
+    <hr />
     {#if config.beziers !== null}
-      {#each Object.values(config.beziers) as bz}
+      {#each Object.entries(config.beziers) as [b, bz]}
         <div>
+          <span>{b}</span>
           <span>{bz.name}</span>
           <span>{bz.x0} </span>
           <span>{bz.y0}</span>

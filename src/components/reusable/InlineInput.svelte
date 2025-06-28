@@ -10,7 +10,7 @@ interface InlineInputProps {
   required?: boolean
   maxLength: number
   postLabel?: Snippet<[() => void]>
-  onSubmit?: (newValue: string) => void
+  onInputSubmit?: (oldValue: string, newValue: string) => string | undefined
 }
 
 let {
@@ -21,36 +21,41 @@ let {
   required = true,
   maxLength,
   postLabel,
-  onSubmit,
+  onInputSubmit,
 }: InlineInputProps = $props()
 
 let value = $state(initialValue)
-let original = $state(initialValue)
 let editing = $state(false)
 
 let label = $derived(value ? value : placeholder)
 
 const edit = () => {
-  original = value
   editing = true
 }
 
-const submit = () => {
-  if (value !== original) {
-    onSubmit?.(value)
+const submit = (e: Event) => {
+  if (!editing) return
+
+  if (value !== initialValue) {
+    const result = onInputSubmit?.(initialValue, value)
+    if (result) {
+      value = result
+    } else {
+      value = initialValue
+    }
   }
   editing = false
 }
 
 const cancel = () => {
-  value = original
+  value = initialValue
   editing = false
 }
 
 const handleKey = (e: KeyboardEvent) => {
   if (e.key === "Enter") {
     e.preventDefault()
-    submit()
+    submit(e)
   } else if (e.key === "Escape") {
     e.preventDefault()
     cancel()

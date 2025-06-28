@@ -11,10 +11,29 @@ import Icon from "@iconify/svelte"
 interface BeziersColumnProps {
   beziers: Record<string, Bezier> | null
   onCreateNewConfig?: () => void
+  onBezierNameChange?: (oldName: string, newName: string) => void
 }
 
-let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
-  $props()
+let {
+  beziers = $bindable(null),
+  onCreateNewConfig,
+  onBezierNameChange,
+}: BeziersColumnProps = $props()
+
+function bezierNameChange(oldName: string, newName: string) {
+  if (!beziers) return
+
+  if (oldName !== newName && newName in beziers) {
+    return oldName
+  }
+
+  if (oldName !== newName) {
+    beziers[newName] = { ...beziers[oldName], name: newName }
+    delete beziers[oldName]
+    onBezierNameChange?.(oldName, newName)
+  }
+  return newName
+}
 </script>
 
 <aside id="beziers">
@@ -26,7 +45,7 @@ let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
     <Card.Content>
       {#if beziers !== null}
         <div class="space-y-4">
-          {#each Object.values(beziers) as bz}
+          {#each Object.values(beziers) as bz (bz.name)}
             <!-- Beziers Input Group -->
             <div class="px-2 py-2">
               <InlineInput
@@ -34,7 +53,7 @@ let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
                 inputClasses="border-input bg-background selection:bg-primary dark:bg-input/30 shadow-xs selection:text-primary-foreground ring-offset-background flex h-6 w-full min-w-0 rounded-md border px-2 py-3 text-base outline-none transition-[color,box-shadow]"
                 labelClasses="font-medium"
                 maxLength={32}
-                onSubmit={(newName: string) => (bz.name = newName)}
+                onInputSubmit={bezierNameChange}
               >
                 {#snippet postLabel(onclick: () => void)}
                   <Icon
