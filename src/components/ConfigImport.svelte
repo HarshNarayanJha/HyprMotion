@@ -10,7 +10,7 @@ import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
 
 let configText = $state<string>("")
-let configFiles: FileList | undefined = $state<FileList | undefined>(undefined)
+let configFiles = $state<FileList | undefined>(undefined)
 let configUrl = $state<string>("")
 
 let configTextDisabled = $derived(
@@ -23,13 +23,14 @@ let configUrlDisabled = $derived(
 
 let formElement = $state<HTMLFormElement | null>(null)
 
-const submitConfig = async (
+async function submitConfig(
   e: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
-) => {
+) {
   e.preventDefault()
+
   if (configTextDisabled && configUrlDisabled && configFiles) {
     const text = await configFiles.item(0)?.text()
-    const parsedConfig = parseConfigFromText(text ?? "")
+    const parsedConfig = parseConfigFromText(text || "")
     if (parsedConfig === null) {
       resetForm()
       return
@@ -139,9 +140,11 @@ const resetForm = () => {
                 </p>
                 <div class="mt-3 rounded-lg px-3 py-2">
                   <p class="text-center text-xs text-gray-600">
-                    Loaded by mistake? Don't worry — <span class="font-semibold"
-                      >click again</span
-                    > to load another
+                    Loaded by mistake? Don't worry — <span
+                      class="font-semibold"
+                    >
+                      click again
+                    </span> to load another
                   </p>
                 </div>
                 <button

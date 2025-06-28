@@ -1,22 +1,28 @@
-import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
+import {
+  animationNames,
+  type Animation,
+  type AnimationName,
+  type Bezier,
+  type Style,
+} from "$lib/types"
 
-export interface ParsedAnimations {
-  beziers: Bezier[]
-  animations: Animation[]
+interface ParsedAnimations {
+  beziers: Record<string, Bezier>
+  animations: Partial<Record<string, Animation>>
 }
 
 export class HyprAnimationParser {
   private beziers: Map<string, Bezier> = new Map()
-  private animations: Animation[] = []
+  private animations: Map<AnimationName, Animation> = new Map()
 
   /**
    * Parse a hyprland config string for animation related config
    */
   public parse(input: string): ParsedAnimations {
     this.reset()
+
     const lines = input.split("\n")
 
-    let inAnimationSection = false
     let inOtherSection = false
 
     for (const line of lines) {
@@ -26,19 +32,16 @@ export class HyprAnimationParser {
       // Check for section changes
       if (trimmedLine.endsWith("{")) {
         if (trimmedLine.startsWith("animations")) {
-          inAnimationSection = true
           inOtherSection = false
           continue
         }
 
         inOtherSection = true
-        inAnimationSection = false
         continue
       }
 
       // Handle section closing
       if (trimmedLine === "}") {
-        inAnimationSection = false
         inOtherSection = false
         continue
       }
@@ -55,14 +58,14 @@ export class HyprAnimationParser {
         }
       } catch (error) {
         throw new Error(
-          `Failed to parse line "${trimmedLine}": ${error.message}`,
+          `Failed to parse line "${trimmedLine}": ${typeof error === "object" ? (error as Error).message : error}`,
         )
       }
     }
 
     return {
-      beziers: Array.from(this.beziers.values()),
-      animations: this.animations,
+      beziers: Object.fromEntries(this.beziers),
+      animations: Object.fromEntries(this.animations),
     }
   }
 
@@ -119,12 +122,12 @@ export class HyprAnimationParser {
 
     // If disabled, we don't need to validate further arguments
     if (!onoff) {
-      this.animations.push({ name, onoff })
+      this.animations.set(name, { name, onoff })
       return
     }
 
     // Parse speed (in ds - deciseconds)
-    const speed = Number.parseInt(speedStr, 10)
+    const speed = Number.parseInt(speedStr)
     if (Number.isNaN(speed) || speed < 0) {
       throw new Error("Speed must be a positive number")
     }
@@ -163,15 +166,13 @@ export class HyprAnimationParser {
             style = `slide ${param}` as Style
             break
 
-          case "popin":
-            // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
+          case "popin": {
             const popinMatch = param.match(/^(\d+)%$/)
             if (!popinMatch) {
               throw new Error(
                 `Invalid popin percentage: ${param}. Must be in format: NUMBER%`,
               )
             }
-            // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
             const popinPercent = Number.parseInt(popinMatch[1], 10)
             if (popinPercent < 0 || popinPercent > 100) {
               throw new Error(
@@ -180,17 +181,16 @@ export class HyprAnimationParser {
             }
             style = `popin ${param}` as Style
             break
+          }
 
           case "slidefade":
-          case "slidefadevert":
-            // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
+          case "slidefadevert": {
             const fadeMatch = param.match(/^(\d+)%$/)
             if (!fadeMatch) {
               throw new Error(
                 `Invalid slide fade percentage: ${param}. Must be in format: NUMBER%`,
               )
             }
-            // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
             const fadePercent = Number.parseInt(fadeMatch[1], 10)
             if (fadePercent < 0 || fadePercent > 100) {
               throw new Error(
@@ -199,6 +199,7 @@ export class HyprAnimationParser {
             }
             style = `${baseStyle} ${param}` as Style
             break
+          }
 
           default:
             throw new Error(`Style ${baseStyle} does not support parameters`)
@@ -208,13 +209,14 @@ export class HyprAnimationParser {
       }
     }
 
-    this.animations.push({
+    this.animations.set(name, {
       name,
       onoff,
       speed,
-      curve: curve === "default" ? "default" : this.beziers.get(curve),
+      curve:
+        curve === "default" ? "default" : this.beziers.get(curve) || "default",
       style,
-    })
+    } as Animation)
   }
 
   /**
@@ -250,40 +252,14 @@ export class HyprAnimationParser {
    */
   private reset(): void {
     this.beziers = new Map()
-    this.animations = []
+    this.animations = new Map()
   }
 
   /**
    * Validate animation name against known types
    */
   private isValidAnimationName(name: string): name is AnimationName {
-    const validNames = [
-      "windows",
-      "windowsIn",
-      "windowsOut",
-      "windowsMove",
-      "layers",
-      "layersIn",
-      "layersOut",
-      "fade",
-      "fadeIn",
-      "fadeOut",
-      "fadeSwitch",
-      "fadeShadow",
-      "fadeDim",
-      "fadeLayers",
-      "fadeLayersIn",
-      "fadeLayersOut",
-      "border",
-      "borderangle",
-      "workspaces",
-      "workspacesIn",
-      "workspacesOut",
-      "specialWorkspace",
-      "specialWorkspaceIn",
-      "specialWorkspaceOut",
-    ]
-    return validNames.includes(name)
+    return animationNames.includes(name)
   }
 
   /**

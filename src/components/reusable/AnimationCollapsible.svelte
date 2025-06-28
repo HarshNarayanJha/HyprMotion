@@ -67,7 +67,7 @@ let speedValue = $derived.by(() => {
   }
 })
 
-let curve = $state(
+let curve = $derived(
   animation?.curve === "default" ? "default" : animation?.curve?.name,
 )
 let curveValue: Bezier | "default" = $derived(
