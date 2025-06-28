@@ -35,15 +35,18 @@ let {
   beziers,
 }: AnimationCollapsibleProps = $props()
 
-const formatStyleParam = (s: string, p: string | number): Style => {
-  let _p = p
-
-  if (typeof _p === "number") {
-    _p = `${p}%`
+function formatStyleParam(s: string, p: string | number | undefined): Style {
+  if (p === undefined) {
+    return `${s}`.trim() as Style
   }
 
-  if (["left", "right", "top", "bottom"].includes(_p))
-    return `slide ${p}` as Style
+  if (typeof p === "number") {
+    return `${s} ${p}%`.trim() as Style
+  }
+
+  if (["left", "right", "top", "bottom"].includes(p)) {
+    return `slide ${p}`.trim() as Style
+  }
 
   return `${s} ${p}`.trim() as Style
 }
@@ -53,7 +56,6 @@ let open = $derived(enabled)
 
 let speed = $state(animation?.speed || 10)
 let speedUnit = $state<SpeedUnit>("ds")
-
 let speedValue = $derived.by(() => {
   switch (speedUnit) {
     case "ms":
@@ -65,14 +67,15 @@ let speedValue = $derived.by(() => {
   }
 })
 
-const _animationCurve =
-  animation?.curve === "default" ? "default" : animation?.curve?.name
-let curve = $state(_animationCurve)
-
+let curve = $state(
+  animation?.curve === "default" ? "default" : animation?.curve?.name,
+)
 let curveValue: Bezier | "default" = $derived(
   beziers.find(b => b.name === curve) || "default",
 )
 
+// TODO: if styleParam is undefined, broken
+// need to make style, styleName, styleParam if possible
 let style = $state(animation?.style?.toString().split(" ")[0])
 let styleParam = $derived.by(() => {
   let st = animation?.style?.toString().trim()
@@ -91,7 +94,7 @@ let styleParam = $derived.by(() => {
   return param
 })
 
-let handleStyleChange = (val: string) => {
+function handleStyleChange(val: string) {
   if (!styleParams) return
 
   if (!val) {
@@ -100,7 +103,10 @@ let handleStyleChange = (val: string) => {
   }
 
   const sParams = styleParams[val]
-  if (!sParams) return
+  if (!sParams) {
+    styleParam = undefined
+    return
+  }
 
   if (sParams.type === "percentage") styleParam = 20
   else if (sParams.type === "select") styleParam = sParams.options?.[0]
@@ -110,34 +116,47 @@ let curveTriggerContent = $derived(curve || "Select...")
 let styleTriggerContent = $derived(style || "Select...")
 let styleParamTriggerContent = $derived(styleParam?.toString() || "Select...")
 
-$effect(() => {
-  // propagate changes up
-
-  if (enabled) {
-    if (!animation) {
-      animation = {
-        name: an as AnimationName,
-        onoff: true,
-        speed: speedValue,
-        curve: curveValue,
-        style:
-          style && styleParam ? formatStyleParam(style, styleParam) : undefined,
-      } as Animation
-    } else {
-      // animation.name = an as AnimationName
-      animation.onoff = true
-      animation.speed = speedValue
-      animation.curve = curveValue
-      if (style !== undefined && styleParam !== undefined) {
-        animation.style = formatStyleParam(style, styleParam)
-      } else {
-        animation.style = undefined
-      }
+function updateAnimation(what: "onoff" | "speed" | "curve" | "style" | "all") {
+  if (animation) {
+    switch (what) {
+      case "onoff":
+        animation.onoff = enabled
+        break
+      case "speed":
+        animation.speed = speedValue
+        break
+      case "curve":
+        animation.curve = curveValue
+        break
+      case "style":
+        if (style !== undefined && styleParam !== undefined) {
+          animation.style = formatStyleParam(style, styleParam)
+        } else {
+          animation.style = undefined
+        }
+        break
+      case "all":
+        animation.onoff = enabled
+        animation.speed = speedValue
+        animation.curve = curveValue
+        if (style !== undefined && styleParam !== undefined) {
+          animation.style = formatStyleParam(style, styleParam)
+        } else {
+          animation.style = undefined
+        }
+        break
     }
   } else {
-    animation = null
+    animation = {
+      name: an as AnimationName,
+      onoff: enabled,
+      speed: speedValue,
+      curve: curveValue,
+      style:
+        style && styleParam ? formatStyleParam(style, styleParam) : undefined,
+    } as Animation
   }
-})
+}
 
 const beziersBuiltIn = [{ name: "default" }]
 const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
@@ -180,6 +199,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
       id="{an}-enabled"
       name="{an}-enabled"
       bind:checked={enabled}
+      onCheckedChange={() => updateAnimation("onoff")}
     />
 
     <button
@@ -210,12 +230,14 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               name="{an}-speed"
               min={0}
               bind:value={speed}
+              onchange={() => updateAnimation("speed")}
             />
             <!-- Speed Unit Selector -->
             <Select.Root
               type="single"
               name="{an}-speed-unit"
               bind:value={speedUnit}
+              onValueChange={() => updateAnimation("speed")}
             >
               <Select.Trigger
                 class="focus:border-ring absolute right-0 top-0 w-16 rounded-l-none bg-neutral-100 shadow-none"
@@ -234,7 +256,12 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
 
           <!-- Curve Selector -->
           <Label for="{an}-curve">Curve</Label>
-          <Select.Root type="single" name="{an}-curve" bind:value={curve}>
+          <Select.Root
+            type="single"
+            name="{an}-curve"
+            bind:value={curve}
+            onValueChange={() => updateAnimation("curve")}
+          >
             <Select.Trigger class="w-full">
               {curveTriggerContent}
             </Select.Trigger>
@@ -269,7 +296,10 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               type="single"
               name="{an}-style"
               bind:value={style}
-              onValueChange={handleStyleChange}
+              onValueChange={(val: string) => {
+                handleStyleChange(val)
+                updateAnimation("style")
+              }}
             >
               <Select.Trigger class="w-full">
                 {styleTriggerContent}
@@ -295,6 +325,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                   type="single"
                   name="{an}-styleparam"
                   bind:value={styleParam as string}
+                  onValueChange={() => updateAnimation("style")}
                 >
                   <Select.Trigger class="w-full">
                     {styleParamTriggerContent}
@@ -319,6 +350,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                     max={100}
                     defaultValue={sParams.default!}
                     bind:value={styleParam as number}
+                    onchange={() => updateAnimation("style")}
                   />
                   <div
                     class="absolute right-0 top-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center"

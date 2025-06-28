@@ -1,19 +1,15 @@
-import type { Animation, Bezier, HyprMotionConfig } from "$lib/types"
+import type {
+  Animation,
+  AnimationName,
+  Bezier,
+  // HyprMotionConfig,
+} from "$lib/types"
 
-let animations = $state<Animation[] | null>(null)
-let beziers = $state<Bezier[] | null>(null)
+export class Config {
+  animations = $state<Partial<Record<AnimationName, Animation>> | null>(null)
+  beziers = $state<Record<string, Bezier> | null>(null)
 
-export const config: HyprMotionConfig = {
-  get animations() {
-    return animations
-  },
-  set animations(updated_animations) {
-    animations = updated_animations
-  },
-  get beziers() {
-    return beziers
-  },
-  set beziers(updated_beziers) {
-    beziers = updated_beziers
-  },
+  configLoaded = $derived(this.animations !== null && this.beziers !== null)
 }
+
+export const config = new Config()

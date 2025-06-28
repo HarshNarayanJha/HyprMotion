@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { goto } from "$app/navigation"
 import Playground from "$components/Playground.svelte"
 import AnimationsColumn from "$components/playground/AnimationsColumn.svelte"
@@ -6,25 +6,22 @@ import BeziersColumn from "$components/playground/BeziersColumn.svelte"
 import TransparentDivider from "$components/reusable/TransparentDivider.svelte"
 import { Button } from "$lib/components/ui/button"
 import * as Dialog from "$lib/components/ui/dialog"
-
 import { config } from "$lib/global.svelte"
 
-let isConfigLoaded = $derived(
-  config.animations !== null && config.beziers !== null,
-)
-
-// svelte-ignore state_referenced_locally: We only need the initial value of this
-let showDialog = $state(!isConfigLoaded)
+let showDialog = $state(!config.configLoaded)
 
 const createNewConfig = () => {
-  config.animations = []
-  config.beziers = []
+  config.animations = {}
+  config.beziers = {}
   showDialog = false
 }
 
 const showCreateNewConfigDialog = () => {
   showDialog = true
 }
+
+// $inspect(config.animations).with(console.log)
+// $inspect(config.beziers).with(console.log)
 </script>
 
 <div class="flex flex-row items-center justify-between">
@@ -44,13 +41,39 @@ const showCreateNewConfigDialog = () => {
     onCreateNewConfig={showCreateNewConfigDialog}
   />
 
-  <Playground {config} />
+  <!-- <div>
+    {#if config.animations !== null}
+      {#each Object.values(config.animations) as anim}
+        <div>
+          <span>{anim.name}</span>
+          <span>{anim.onoff} </span>
+          <span>{anim.speed}</span>
+          <span>{anim.curve} </span>
+          <span>{anim.style}</span>
+        </div>
+      {/each}
+    {:else}
+      No Animations
+    {/if}
+    {#if config.beziers !== null}
+      {#each Object.values(config.beziers) as bz}
+        <div>
+          <span>{bz.name}</span>
+          <span>{bz.x0} </span>
+          <span>{bz.y0}</span>
+          <span>{bz.x1}</span>
+          <span>{bz.y1}</span>
+        </div>
+      {/each}
+    {:else}
+      No Bezier Curves
+    {/if}
+  </div> -->
+
+  <Playground {config}/>
 
   <AnimationsColumn
-    bind:animations={
-      () => config.animations,
-      (newAnimations) => (config.animations = newAnimations)
-    }
+    bind:animations={config.animations}
     beziers={config.beziers}
     onCreateNewConfig={showCreateNewConfigDialog}
   />

@@ -9,7 +9,7 @@ import type { Bezier } from "$lib/types"
 import Icon from "@iconify/svelte"
 
 interface BeziersColumnProps {
-  beziers: Bezier[] | null
+  beziers: Record<string, Bezier> | null
   onCreateNewConfig?: () => void
 }
 
@@ -24,9 +24,9 @@ let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
       <Separator class="my-2" />
     </Card.Header>
     <Card.Content>
-      {#if beziers !== null && beziers.length > 0}
+      {#if beziers !== null}
         <div class="space-y-4">
-          {#each beziers as bz}
+          {#each Object.values(beziers) as bz}
             <!-- Beziers Input Group -->
             <div class="px-2 py-2">
               <InlineInput
@@ -84,15 +84,15 @@ let { beziers = $bindable(null), onCreateNewConfig }: BeziersColumnProps =
                 />
               </div>
             </div>
+          {:else}
+            <div class="my-16 space-y-4 text-center text-sm">
+              <p>No Bezier curves defined in config</p>
+              <Button size="sm">
+                <Icon icon="material-symbols:add-circle" />
+                Add
+              </Button>
+            </div>
           {/each}
-        </div>
-      {:else if beziers !== null && beziers.length == 0}
-        <div class="my-16 space-y-4 text-center text-sm">
-          <p>No Bezier curves defined in config</p>
-          <Button size="sm">
-            <Icon icon="material-symbols:add-circle" />
-            Add
-          </Button>
         </div>
       {:else}
         <div class="my-16 space-y-4 text-center text-sm">

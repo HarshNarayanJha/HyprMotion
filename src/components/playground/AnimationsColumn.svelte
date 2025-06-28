@@ -6,11 +6,10 @@ import { Separator } from "$lib/components/ui/separator"
 import { animationGroups } from "$lib/data"
 import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
-import Page from "../../routes/playground/+page.svelte"
 
 interface AnimationsColumnProps {
-  animations: Animation[] | null
-  beziers: Bezier[] | null
+  animations: Partial<Record<AnimationName, Animation>> | null
+  beziers: Record<string, Bezier> | null
   onCreateNewConfig?: () => void
 }
 
@@ -20,10 +19,10 @@ let {
   onCreateNewConfig,
 }: AnimationsColumnProps = $props()
 
-const getStylesForAnimation = (
+function getStylesForAnimation(
   an: string,
   styles: Style[] | Record<AnimationName, Style[]> | undefined,
-) => {
+) {
   if (!styles) return null
   if (Array.isArray(styles)) return styles
   return styles[an as AnimationName]
@@ -32,23 +31,16 @@ const getStylesForAnimation = (
 const getAnimation = (an: string): Animation | null => {
   if (animations === null) return null
 
-  return animations.find(animation => animation.name === an) || null
+  return animations[an as AnimationName] || null
 }
 
 const setAnimation = (an: string, anim: Animation | null) => {
-  console.log(`Setting ${an} to ${anim}`)
   if (animations === null) return
 
-  const index = animations.findIndex(x => x.name === an)
-
   if (anim !== null) {
-    if (index !== -1) {
-      animations[index] = anim
-    } else {
-      animations.push(anim)
-    }
+    animations[an as AnimationName] = anim
   } else {
-    animations.splice(index, 1)
+    animations[an as AnimationName] = undefined
   }
 }
 </script>
@@ -85,7 +77,7 @@ const setAnimation = (an: string, anim: Animation | null) => {
                   {description}
                   {styles}
                   styleParams={anGroup.styleParams || null}
-                  beziers={beziers || []}
+                  beziers={Object.values(beziers)}
                 />
               {/each}
             </div>
