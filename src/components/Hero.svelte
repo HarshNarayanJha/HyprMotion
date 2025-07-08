@@ -30,11 +30,9 @@ onMount(() => {
 </script>
 
 <section class="min-h-svh w-full text-center">
-  <div class="h-[28svh] xl:h-[32svh]"></div>
-  <h1 class="text-9xl font-bold leading-8">HyprMotion</h1>
-  <p
-    class="translate-z-20 text-shadow-black text-shadow-lg text-2xl font-semibold text-white"
-  >
+  <div class="h-[12svh] md:h-[28svh] xl:h-[32svh]"></div>
+  <h1 class="text-9xl leading-8 font-bold">HyprMotion</h1>
+  <p class="translate-z-20 text-2xl font-semibold text-white text-shadow-black text-shadow-lg">
     Visualize Hyprland Animations with ease
   </p>
 
@@ -46,9 +44,7 @@ onMount(() => {
         icon="hugeicons:mouse-scroll-02"
         width="32"
         height="32"
-        class="absolute bottom-4 left-1/2 {mouseBounce
-          ? 'animate-bounce'
-          : 'animate-pulse'}"
+        class="absolute bottom-4 left-1/2 {mouseBounce ? 'animate-bounce' : 'animate-pulse'}"
       />
     </span>
   {/if}

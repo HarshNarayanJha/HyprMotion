@@ -11,7 +11,7 @@ interface InstructionCardProps {
 let { icon, text }: InstructionCardProps = $props()
 </script>
 
-<Card.Root class="max-w-[450px] shadow-md transition-[shadow_transform] hover:shadow-lg hover:-translate-y-0.25">
+<Card.Root class="max-w-[450px] shadow-md transition-[shadow_transform] hover:shadow-lg hover:-translate-y-1 hover:border-neutral-500/50 hover:border-b-neutral-500/35">
   <Card.Content class="grid grid-cols-[0.5fr_0.1fr_2fr] gap-2 text-start">
     <span class="m-auto content-center">
       <Icon {icon} width="28" height="28" />

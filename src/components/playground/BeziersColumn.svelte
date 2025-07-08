@@ -56,51 +56,19 @@ function bezierNameChange(oldName: string, newName: string) {
                 onInputSubmit={bezierNameChange}
               >
                 {#snippet postLabel(onclick: () => void)}
-                  <Icon
-                    icon="fe:edit"
-                    class="inline"
-                    width={12}
-                    height={16}
-                    {onclick}
-                  />
+                  <Icon icon="fe:edit" class="inline" width={12} height={16} {onclick} />
                 {/snippet}
               </InlineInput>
 
-              <div
-                class="mt-2 grid grid-cols-[1fr_3fr_1fr_3fr] items-center justify-items-end gap-2"
-              >
+              <div class="mt-2 grid grid-cols-[1fr_3fr_1fr_3fr] items-center justify-items-end gap-2">
                 <Label for="{bz.name}-x0">x0</Label>
-                <Input
-                  name="{bz.name}-x0"
-                  id="{bz.name}-x0"
-                  bind:value={bz.x0}
-                  placeholder="x0"
-                  type="number"
-                />
+                <Input name="{bz.name}-x0" id="{bz.name}-x0" bind:value={bz.x0} placeholder="x0" type="number" />
                 <Label for="{bz.name}-x1">x1</Label>
-                <Input
-                  name="{bz.name}-x1"
-                  id="{bz.name}-x1"
-                  bind:value={bz.x1}
-                  placeholder="x1"
-                  type="number"
-                />
+                <Input name="{bz.name}-x1" id="{bz.name}-x1" bind:value={bz.x1} placeholder="x1" type="number" />
                 <Label for="{bz.name}-y0">y0</Label>
-                <Input
-                  name="{bz.name}-y0"
-                  id="{bz.name}-y0"
-                  bind:value={bz.y0}
-                  placeholder="y0"
-                  type="number"
-                />
+                <Input name="{bz.name}-y0" id="{bz.name}-y0" bind:value={bz.y0} placeholder="y0" type="number" />
                 <Label for="{bz.name}-y1">y1</Label>
-                <Input
-                  name="{bz.name}-y1"
-                  id="{bz.name}-y1"
-                  bind:value={bz.y1}
-                  placeholder="y1"
-                  type="number"
-                />
+                <Input name="{bz.name}-y1" id="{bz.name}-y1" bind:value={bz.y1} placeholder="y1" type="number" />
               </div>
             </div>
           {:else}
@@ -124,9 +92,7 @@ function bezierNameChange(oldName: string, newName: string) {
       {/if}
     </Card.Content>
     <Card.Footer>
-      <p class="text-xs">
-        Bezier curves define how your animations look and feel
-      </p>
+      <p class="text-xs">Bezier curves define how your animations look and feel</p>
     </Card.Footer>
   </Card.Root>
 </aside>

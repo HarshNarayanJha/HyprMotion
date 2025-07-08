@@ -13,6 +13,8 @@ let configText = $state<string>("")
 let configFiles = $state<FileList | undefined>(undefined)
 let configUrl = $state<string>("")
 
+let processing = $state<boolean>(false)
+
 let configTextDisabled = $derived(
   (configFiles !== undefined && configFiles.length > 0) || configUrl !== "",
 )
@@ -27,6 +29,8 @@ async function submitConfig(
   e: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
 ) {
   e.preventDefault()
+
+  processing = true
 
   if (configTextDisabled && configUrlDisabled && configFiles) {
     const text = await configFiles.item(0)?.text()
@@ -65,16 +69,11 @@ const resetForm = () => {
 }
 </script>
 
-<form
-  class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 xl:px-24"
-  onsubmit={submitConfig}
-  bind:this={formElement}
->
+<form class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 xl:px-24" onsubmit={submitConfig} bind:this={formElement}>
   <div class="m-auto p-8">
     <h2 class="text-xl font-semibold">Paste your animation config</h2>
-    <p class="prose prose-sm">
-      Complete or partial <code>~/.config/hypr/hyprland.conf</code> containing
-      exactly one
+    <p class="prose prose-sm dark:prose-invert">
+      Complete or partial <code>~/.config/hypr/hyprland.conf</code> containing exactly one
       <code>animations</code> block
     </p>
     <Textarea
@@ -83,7 +82,7 @@ const resetForm = () => {
       placeholder="Paste your hyprland config..."
       name="configText"
       id="configText"
-      class="my-4 rounded-lg border border-neutral-800/20 p-4 ring-0 ring-blue-600/50 hover:ring disabled:hover:ring-0"
+      class="my-4 rounded-lg border border-neutral-800/20 p-4 ring-0 hover:ring disabled:hover:ring-0"
       rows={15}
       cols={30}
     />
@@ -93,9 +92,8 @@ const resetForm = () => {
 
   <div class="m-auto p-8">
     <h2 class="text-xl font-semibold">Import from file</h2>
-    <p class="prose prose-sm">
-      Upload your <code>~/.config/hypr/hyprland.conf</code> or any other conf
-      file containing exactly one
+    <p class="prose prose-sm dark:prose-invert">
+      Upload your <code>~/.config/hypr/hyprland.conf</code> or any other conf file containing exactly one
       <code>animations</code> block
     </p>
 
@@ -104,53 +102,38 @@ const resetForm = () => {
         <Label
           for="dropzone-file"
           class="flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed {configFilesDisabled
-            ? 'cursor-not-allowed border-gray-300/50 bg-gray-100/50 opacity-45'
-            : 'cursor-pointer  border-gray-300 bg-gray-100 hover:bg-gray-200'}"
+            ? 'cursor-not-allowed border-gray-300/50 bg-gray-100/50 opacity-45 dark:border-gray-700/50 dark:bg-gray-900/50'
+            : 'cursor-pointer border-gray-300 bg-gray-100 hover:bg-gray-200 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800'}"
         >
           {#if !configFiles || configFiles.length === 0}
-            <div class="pb-6 pt-5">
-              <Icon
-                icon="material-symbols:upload-file"
-                class="m-auto mb-4 h-8 w-8 text-gray-500"
-              />
-              <p class="mb-2 text-center text-sm text-gray-500">
+            <div class="pt-5 pb-6">
+              <Icon icon="material-symbols:upload-file" class="m-auto mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" />
+              <p class="mb-2 text-center text-sm text-gray-500 dark:text-gray-400">
                 <span class="font-semibold">Click to upload</span>
                 <!-- -- or drag and drop -->
               </p>
-              <p class="text-xs text-gray-500">
-                Hyprland .conf files only (max 10KiB)
-              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Hyprland .conf files only (max 10KiB)</p>
             </div>
           {:else}
-            <div class="pb-6 pt-5">
+            <div class="pt-5 pb-6">
               <div class="flex flex-col items-center justify-center">
-                <Icon
-                  icon="lucide:file-check"
-                  class="mb-4 h-10 w-10 text-green-500"
-                />
-                <p class="mb-1 text-sm font-semibold text-gray-700">
-                  File loaded successfully!
-                </p>
-                <p class="mb-2 text-sm font-medium text-gray-600">
+                <Icon icon="lucide:file-check" class="mb-4 h-10 w-10 text-green-500 dark:text-green-400" />
+                <p class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">File loaded successfully!</p>
+                <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">
                   {configFiles.item(0)?.name}
                 </p>
-                <p class="text-xs text-gray-500">
-                  {Math.round(((configFiles.item(0)?.size || 0) / 1024) * 100) /
-                    100} KB
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  {Math.round(((configFiles.item(0)?.size || 0) / 1024) * 100) / 100} KB
                 </p>
                 <div class="mt-3 rounded-lg px-3 py-2">
-                  <p class="text-center text-xs text-gray-600">
-                    Loaded by mistake? Don't worry — <span
-                      class="font-semibold"
-                    >
-                      click again
-                    </span> to load another
+                  <p class="text-center text-xs text-gray-600 dark:text-gray-300">
+                    Loaded by mistake? Don't worry — <span class="font-semibold"> click again </span> to load another
                   </p>
                 </div>
                 <button
                   type="button"
                   onclick={resetForm}
-                  class="mt-2 rounded-md bg-red-600 px-3 py-1 text-sm font-medium text-white hover:bg-red-500 active:bg-red-400"
+                  class="mt-2 rounded-md bg-red-600 px-3 py-1 text-sm font-medium text-white hover:bg-red-500 active:bg-red-400 dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-500"
                 >
                   <Icon icon="mdi:file-remove" class="inline-block h-5 w-5" />
                   Remove File
@@ -174,15 +157,14 @@ const resetForm = () => {
     <TransparentDivider />
 
     <h2 class="text-xl font-semibold">Insert file URI</h2>
-    <p class="prose prose-sm">
-      Provide the URI for your <code>hyprland.conf</code> or any other conf file
-      containing exactly one
+    <p class="prose prose-sm dark:prose-invert">
+      Provide the URI for your <code>hyprland.conf</code> or any other conf file containing exactly one
       <code>animations</code> block. Can be a GitHub URI or a direct file URI
     </p>
     <Input
       bind:value={configUrl}
       disabled={configUrlDisabled}
-      class="my-4 rounded-lg border border-neutral-800/20 p-2 ring-0 ring-blue-600/50 hover:ring disabled:hover:ring-0"
+      class="my-4 rounded-lg border border-neutral-800/20 p-2 ring-0 hover:ring disabled:hover:ring-0"
       type="text"
       placeholder="Example: https://github.com/end-4/dots-hyprland/blob/main/.config/hypr/hyprland/general.conf"
     />
@@ -190,9 +172,9 @@ const resetForm = () => {
   </div>
 
   <Button
-    class="bg-hyprland hover:bg-hyprland/50 col-span-3 m-auto rounded-lg px-4 py-2 font-medium ring-2 ring-cyan-100 active:ring-cyan-300 disabled:ring-0"
+    class="col-span-3 m-auto rounded-lg px-4 py-2 font-medium ring-2 disabled:ring-0"
     variant="secondary"
-    disabled={!configTextDisabled && !configUrlDisabled && !configFilesDisabled}
+    disabled={!configTextDisabled && !configUrlDisabled && !configFilesDisabled || processing}
     type="submit"
   >
     Start Visualizing

@@ -3,7 +3,7 @@
 
 @plugin '@tailwindcss/typography';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --radius: 0.625rem;
@@ -142,24 +142,32 @@
   }
 
   button {
-    @apply disabled:opacity-35 disabled:bg-cyan-100 disabled:cursor-not-allowed transition-opacity;
+    @apply disabled:opacity-35 disabled:cursor-not-allowed transition-opacity;
   }
 }
 
-@theme {
-  --color-hyprland: #00cfff;
-  --color-debug: #ff0080;
+:root {
+  @theme {
+    --color-hyprland: #00cfff;
+    --color-debug: #ff0080;
+  }
+}
+.dark {
+  @theme {
+    --color-hyprland: #00cfff;
+    --color-debug: #ff0080;
+  }
 }
 
-.bg-grid {
-  --grid-lines-color: #12121223;
+@layer base {
+  .bg-grid {
+    --grid-lines-color: color-mix(in srgb, var(--color-ring), transparent 50%);
 
-  background-size: 40px 40px;
-  background-image: linear-gradient(
-      to right,
-      var(--grid-lines-color) 1px,
-      transparent 1px
-    ), linear-gradient(to bottom, var(--grid-lines-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-image:
+      linear-gradient(to right, var(--grid-lines-color) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-lines-color) 1px, transparent 1px);
 
-  mask-image: linear-gradient(to bottom, white, transparent 45%);
+    mask-image: linear-gradient(to bottom, white, transparent 45%);
+  }
 }

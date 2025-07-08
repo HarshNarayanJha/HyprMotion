@@ -1,12 +1,19 @@
 <script lang="ts">
+import ColorThemeSwitcher from "./reusable/ColorThemeSwitcher.svelte"
 </script>
 
-<div class="sticky top-4">
+<div class="sticky top-4 grid grid-cols-[1fr_3fr_1fr] place-content-center justify-items-center">
   <nav
-    class="container m-auto flex max-w-[600px] flex-row items-center justify-evenly gap-4 rounded-3xl bg-neutral-900/10 px-6 py-2 backdrop-blur-md"
+    class={[
+      "col-start-2 flex max-w-[600px] flex-row items-center justify-evenly gap-18  rounded-3xl px-6 py-2 backdrop-blur-md",
+      "border border-t-2 border-b-0 border-neutral-300/50 bg-gradient-to-b from-neutral-300/25 from-55% to-neutral-300/5 dark:from-neutral-500/20 dark:to-neutral-50/10",
+    ]}
   >
-    <a href="/" class="border-hyprland/50 rounded-full border-2 bg-neutral-100 px-2 py-0 font-bold">HyprMotion</a>
-    <a href="https://github.com/hyprwm/Hyprland" class="font-semibold" target="_blank">Hyprland</a>
-    <a href="https://github.com/HarshNarayanJha/HyprMotion" target="_blank">GitHub</a>
+    <a href="/" class="font-bold"> HyprMotion </a>
+    <a href="https://github.com/hyprwm/Hyprland" class="font-semibold" target="_blank" rel="noopener noreferrer">
+      Hyprland
+    </a>
+    <a href="https://github.com/HarshNarayanJha/HyprMotion" target="_blank" rel="noopener noreferrer"> GitHub </a>
   </nav>
+  <ColorThemeSwitcher />
 </div>

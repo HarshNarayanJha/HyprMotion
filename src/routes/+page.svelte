@@ -1,6 +1,6 @@
 <script>
-import ConfigImport from "../components/ConfigImport.svelte"
-import Hero from "../components/Hero.svelte"
+import ConfigImport from "$components/ConfigImport.svelte"
+import Hero from "$components/Hero.svelte"
 </script>
 
 <div class="bg-grid absolute -z-50 h-full w-full"></div>

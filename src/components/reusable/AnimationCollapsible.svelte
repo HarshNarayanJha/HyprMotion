@@ -173,15 +173,8 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
     <!-- Animation Name -->
     <Tooltip.Provider delayDuration={50}>
       <Tooltip.Root>
-        <Tooltip.Trigger
-          type="button"
-          role="button"
-          onclick={() => (open = enabled ? !open : false)}
-        >
-          <span
-            class="w-full cursor-pointer text-start font-medium {!enabled &&
-              'text-muted-foreground bg-inherit'}"
-          >
+        <Tooltip.Trigger type="button" role="button" onclick={() => (open = enabled ? !open : false)}>
+          <span class="w-full cursor-pointer text-start font-medium {!enabled && 'text-muted-foreground bg-inherit'}">
             {an}
           </span>
         </Tooltip.Trigger>
@@ -195,7 +188,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
 
     <!-- Onoff switch -->
     <Switch
-      class="ml-auto mr-2"
+      class="mr-2 ml-auto"
       id="{an}-enabled"
       name="{an}-enabled"
       bind:checked={enabled}
@@ -214,10 +207,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
   </div>
 
   {#if open}
-    <div
-      class="rounded-md bg-neutral-50/75 p-4"
-      transition:slide={{ duration: 200 }}
-    >
+    <div class="rounded-md bg-neutral-50/75 p-4 dark:bg-gray-950/75" transition:slide={{ duration: 200 }}>
       <Collapsible.Content>
         <div class="grid grid-cols-[1fr_2fr] gap-2">
           <!-- Speed Input -->
@@ -240,7 +230,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               onValueChange={() => updateAnimation("speed")}
             >
               <Select.Trigger
-                class="focus:border-ring absolute right-0 top-0 w-16 rounded-l-none bg-neutral-100 shadow-none"
+                class="focus:border-ring absolute top-0 right-0 w-16 rounded-l-none bg-neutral-100 shadow-none"
               >
                 {speedUnit}
               </Select.Trigger>
@@ -273,9 +263,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                     {bz.name}
                   </Select.Item>
                 {:else}
-                  <Select.Label class="ml-2 text-xs"
-                    >None Defined yet</Select.Label
-                  >
+                  <Select.Label class="ml-2 text-xs">None Defined yet</Select.Label>
                 {/each}
               </Select.Group>
               <Select.Group>
@@ -353,20 +341,18 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                     onchange={() => updateAnimation("style")}
                   />
                   <div
-                    class="absolute right-0 top-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center"
+                    class="absolute top-0 right-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center dark:bg-neutral-950/50"
                   >
                     %
                   </div>
                 </div>
-                <p class="prose col-span-2 text-end text-xs">
+                <p class="prose dark:prose-invert col-span-2 text-end text-xs">
                   {sParams.description!}
                 </p>
               {/if}
             {/if}
           {:else}
-            <p class="text-muted-foreground col-span-2 w-full text-xs">
-              This animation does not supports styles
-            </p>
+            <p class="text-muted-foreground col-span-2 w-full text-xs">This animation does not supports styles</p>
           {/if}
         </div>
       </Collapsible.Content>
