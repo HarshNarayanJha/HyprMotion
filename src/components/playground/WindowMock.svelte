@@ -1,0 +1,328 @@
+<script lang="ts">
+import { Button } from "$lib/components/ui/button"
+import { animationGroups } from "$lib/data"
+import type { Animation, AnimationName, Bezier } from "$lib/types"
+import type { Attachment } from "svelte/attachments"
+
+interface WindowMockProps {
+  animations: Partial<Record<AnimationName, Animation>>
+  beziers: Record<string, Bezier>
+}
+
+let { animations, beziers }: WindowMockProps = $props()
+
+let windowRef = $state<HTMLDivElement>()
+
+const windowsAnimationName: AnimationName = "windows"
+const windowsInAnimationName: AnimationName = "windowsIn"
+const windowsOutAnimationName: AnimationName = "windowsOut"
+const windowsMoveAnimationName: AnimationName = "windowsMove"
+const fadeAnimationName: AnimationName = "fade"
+const fadeInAnimationName: AnimationName = "fadeIn"
+const fadeOutAnimationName: AnimationName = "fadeOut"
+
+const windowAnimationNames = Object.keys(animationGroups.windows.animations)
+const fadeAnimationNames = Object.keys(animationGroups.fade.animations)
+
+let windowsAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return null
+  const anim = animations[windowsAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return null
+
+  return anim
+})
+
+let windowsInAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return windowsAnim
+  const anim = animations[windowsInAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return windowsAnim
+
+  return anim
+})
+
+let windowsOutAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return windowsAnim
+  const anim = animations[windowsOutAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return windowsAnim
+
+  return anim
+})
+
+let windowsMoveAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return windowsAnim
+  const anim = animations[windowsMoveAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return windowsAnim
+
+  return anim
+})
+
+let fadeAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return null
+  const anim = animations[fadeAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return null
+
+  return anim
+})
+
+let fadeInAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return fadeAnim
+  const anim = animations[fadeInAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return fadeAnim
+
+  return anim
+})
+
+let fadeOutAnim = $derived.by(() => {
+  // default anim
+  if (!animations) return fadeAnim
+  const anim = animations[fadeOutAnimationName]
+  // return the default animation
+  if (!anim || anim.onoff === false) return fadeAnim
+
+  return anim
+})
+
+const windowAnimationStyle = (animation: Animation) => {
+  if (!windowAnimationNames.includes(animation.name)) {
+    return {
+      bezier: null,
+      css: null,
+    }
+  }
+
+  const bezier =
+    animation.curve === "default" || animation.curve === undefined
+      ? "cubic-bezier(0.4, 0, 0.2, 1)"
+      : `cubic-bezier(${animation.curve.x0}, ${animation.curve.y0}, ${animation.curve.x1}, ${animation.curve.y1})`
+
+  if (!animation.style) {
+    return {
+      bezier,
+      css: {
+        transform: "initial",
+      },
+    }
+  }
+
+  if (animation.style === "slide top") {
+    return {
+      bezier,
+      css: {
+        transform: "translateY(-100%)",
+      },
+    }
+  }
+
+  if (animation.style === "slide bottom") {
+    return {
+      bezier,
+      css: {
+        transform: "translateY(100%)",
+      },
+    }
+  }
+
+  if (animation.style === "slide left") {
+    return {
+      bezier,
+      css: {
+        transform: "translateX(-100%)",
+      },
+    }
+  }
+
+  if (animation.style === "slide right") {
+    return {
+      bezier,
+      css: {
+        transform: "translateX(100%)",
+      },
+    }
+  }
+
+  if (animation.style === "gnomed") {
+    return {
+      bezier,
+      css: {
+        transform: "scale(0)",
+      },
+    }
+  }
+
+  const match = (animation?.style || "").match(/^popin (\d+)%$/)
+
+  if (match) {
+    return {
+      bezier,
+      css: {
+        transform: `scale(${match[1]}%)`,
+      },
+    }
+  }
+
+  return {
+    bezier,
+    css: {
+      transform: "initial",
+    },
+  }
+}
+
+const fadeAnimationStyle = (animation: Animation) => {
+  if (!fadeAnimationNames.includes(animation.name)) {
+    return {
+      bezier: null,
+      css: null,
+    }
+  }
+
+  const bezier =
+    animation.curve === "default" || animation.curve === undefined
+      ? "cubic-bezier(0.4, 0, 0.2, 1)"
+      : `cubic-bezier(${animation.curve.x0}, ${animation.curve.y0}, ${animation.curve.x1}, ${animation.curve.y1})`
+
+  return {
+    bezier,
+    css: {
+      opacity: 0,
+    },
+  }
+}
+
+const getAnimationStyle = (animation: Animation, what: "window" | "fade", dir: "in" | "out") => {
+  switch (what) {
+    case "window": {
+      const windowStyles = windowAnimationStyle(animation)
+      if (!windowStyles.css && !windowStyles.bezier) {
+        return { windowKeyframes: null, windowTiming: null }
+      }
+
+      const windowKeyframes: Keyframe[] = [{ ...windowStyles.css }]
+
+      if (dir === "in") {
+        windowKeyframes.push({ transform: "initial" })
+      } else if (dir === "out") {
+        windowKeyframes.unshift({ transform: "initial" })
+      }
+
+      const windowTiming: KeyframeAnimationOptions = {
+        duration: (animation.speed ?? 10) * 100,
+        easing: windowStyles.bezier,
+        fill: "forwards",
+      }
+
+      return { windowKeyframes, windowTiming }
+    }
+    case "fade": {
+      const fadeStyles = fadeAnimationStyle(animation)
+      if (!fadeStyles.css && !fadeStyles.bezier) {
+        return { fadeKeyframes: null, fadeTiming: null }
+      }
+
+      const fadeKeyframes: Keyframe[] = [{ ...fadeStyles.css }]
+
+      if (dir === "in") {
+        fadeKeyframes.push({ opacity: "initial" })
+      } else if (dir === "out") {
+        fadeKeyframes.unshift({ opacity: "initial" })
+      }
+
+      const fadeTiming: KeyframeAnimationOptions = {
+        duration: (animation.speed ?? 10) * 100,
+        easing: fadeStyles.bezier,
+        fill: "forwards",
+      }
+
+      return { fadeKeyframes, fadeTiming }
+    }
+  }
+}
+
+const applyAnimation = (
+  anim: Animation,
+  dir: "in" | "out",
+  preventMountRun = false,
+): Attachment => {
+  let firstRun = true
+
+  return (element: Element) => {
+    const { windowKeyframes, windowTiming } = getAnimationStyle(anim, "window", dir)
+    const { fadeKeyframes, fadeTiming } = getAnimationStyle(anim, "fade", dir)
+
+    // prevent attachments having preventMountRun true from running for the first time
+    if (firstRun && preventMountRun) {
+      firstRun = false
+      return
+    }
+
+    console.log(windowKeyframes, windowTiming)
+    console.log(fadeKeyframes, fadeTiming)
+
+    let windowAnimation: globalThis.Animation | null = null
+    let fadeAnimation: globalThis.Animation | null = null
+
+    if (windowKeyframes && windowTiming) {
+      windowAnimation = element.animate(windowKeyframes, windowTiming)
+    }
+    if (fadeKeyframes && fadeTiming) {
+      fadeAnimation = element.animate(fadeKeyframes, fadeTiming)
+    }
+
+    return () => {
+      windowAnimation?.finish()
+      fadeAnimation?.finish()
+    }
+  }
+}
+
+const playOpen = () => {
+  applyAnimation(windowsInAnim!, "in")(windowRef as Element)
+  applyAnimation(fadeInAnim!, "in")(windowRef as Element)
+}
+
+const playClose = () => {
+  applyAnimation(windowsOutAnim!, "out")(windowRef as Element)
+  applyAnimation(fadeOutAnim!, "out")(windowRef as Element)
+}
+</script>
+
+<div class="flex flex-col items-center justify-center gap-8 overflow-clip">
+  <div
+    class="h-[400px] w-[600px] rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    bind:this={windowRef}
+    {@attach applyAnimation(windowsInAnim!, "in")}
+    {@attach applyAnimation(windowsOutAnim!, "out", true)}
+    {@attach applyAnimation(fadeInAnim!, "in")}
+    {@attach applyAnimation(fadeOutAnim!, "out", true)}
+  >
+    <!-- Window header -->
+    <div
+      class="flex h-7 items-center space-x-2 rounded-t-lg border-b border-gray-200 bg-gray-100 px-3 dark:border-neutral-700/50 dark:bg-neutral-900/25"
+    >
+      <div class="h-3 w-3 rounded-full bg-neutral-700/75"></div>
+      <div class="h-3 w-3 rounded-full bg-neutral-500/50"></div>
+      <div class="h-3 w-3 rounded-full bg-neutral-200/25"></div>
+    </div>
+
+    <!-- Window content -->
+    <div class="bg-grid h-full p-4">
+      <!-- <div class="text-gray-800 dark:text-gray-200">Window Content</div> -->
+    </div>
+  </div>
+  <div class="flex w-full flex-row items-center justify-evenly">
+    <Button onclick={playOpen}>Open</Button>
+    <Button onclick={playClose}>Close</Button>
+  </div>
+</div>

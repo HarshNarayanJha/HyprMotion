@@ -114,7 +114,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
   body {
@@ -127,22 +127,6 @@
 
   section {
     @apply mb-16;
-  }
-
-  input[type="text"] {
-    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
-  }
-
-  textarea {
-    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
-  }
-
-  input[type="file"] {
-    @apply disabled:placeholder:text-current/50 disabled:cursor-not-allowed disabled:ring-0 transition-opacity disabled:opacity-35;
-  }
-
-  button {
-    @apply disabled:opacity-35 disabled:cursor-not-allowed transition-opacity;
   }
 }
 

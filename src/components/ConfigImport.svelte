@@ -82,7 +82,7 @@ const resetForm = () => {
       placeholder="Paste your hyprland config..."
       name="configText"
       id="configText"
-      class="my-4 rounded-lg border border-neutral-800/20 p-4 ring-0 hover:ring disabled:hover:ring-0"
+      class="my-4 rounded-lg p-4"
       rows={15}
       cols={30}
     />
@@ -164,7 +164,7 @@ const resetForm = () => {
     <Input
       bind:value={configUrl}
       disabled={configUrlDisabled}
-      class="my-4 rounded-lg border border-neutral-800/20 p-2 ring-0 hover:ring disabled:hover:ring-0"
+      class="my-4 rounded-lg p-2"
       type="text"
       placeholder="Example: https://github.com/end-4/dots-hyprland/blob/main/.config/hypr/hyprland/general.conf"
     />
@@ -172,9 +172,9 @@ const resetForm = () => {
   </div>
 
   <Button
-    class="col-span-3 m-auto rounded-lg px-4 py-2 font-medium ring-2 disabled:ring-0"
-    variant="secondary"
-    disabled={!configTextDisabled && !configUrlDisabled && !configFilesDisabled || processing}
+    class="bg-hyprland/80 hover:bg-hyprland/90 col-span-3 m-auto rounded-lg px-4 py-2 font-medium text-black"
+    variant="default"
+    disabled={(!configTextDisabled && !configUrlDisabled && !configFilesDisabled) || processing}
     type="submit"
   >
     Start Visualizing
