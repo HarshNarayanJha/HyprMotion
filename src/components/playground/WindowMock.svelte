@@ -2,6 +2,7 @@
 import { Button } from "$lib/components/ui/button"
 import { animationGroups } from "$lib/data"
 import type { Animation, AnimationName, Bezier } from "$lib/types"
+import Icon from "@iconify/svelte"
 import type { Attachment } from "svelte/attachments"
 
 interface WindowMockProps {
@@ -288,11 +289,13 @@ const applyAnimation = (
 }
 
 const playOpen = () => {
+  console.log("Opening Window")
   applyAnimation(windowsInAnim!, "in")(windowRef as Element)
   applyAnimation(fadeInAnim!, "in")(windowRef as Element)
 }
 
 const playClose = () => {
+  console.log("Closing Window")
   applyAnimation(windowsOutAnim!, "out")(windowRef as Element)
   applyAnimation(fadeOutAnim!, "out")(windowRef as Element)
 }
@@ -300,7 +303,7 @@ const playClose = () => {
 
 <div class="flex flex-col items-center justify-center gap-8 overflow-clip">
   <div
-    class="h-[400px] w-[600px] rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none h-[400px] w-[600px] rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={windowRef}
     {@attach applyAnimation(windowsInAnim!, "in")}
     {@attach applyAnimation(windowsOutAnim!, "out", true)}
@@ -322,7 +325,13 @@ const playClose = () => {
     </div>
   </div>
   <div class="flex w-full flex-row items-center justify-evenly">
-    <Button onclick={playOpen}>Open</Button>
-    <Button onclick={playClose}>Close</Button>
+    <Button onclick={playOpen} variant="secondary">
+      <Icon icon="lucide:mouse-pointer-click" />
+      Open
+    </Button>
+    <Button onclick={playClose} variant="secondary">
+      <Icon icon="lucide:circle-x" />
+      Close
+    </Button>
   </div>
 </div>
