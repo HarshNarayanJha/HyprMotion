@@ -1,4 +1,5 @@
 <script lang="ts">
+import { base } from "$app/paths"
 import ColorThemeSwitcher from "./reusable/ColorThemeSwitcher.svelte"
 </script>
 
@@ -9,11 +10,22 @@ import ColorThemeSwitcher from "./reusable/ColorThemeSwitcher.svelte"
       "border border-t-2 border-b-0 border-neutral-300/50 bg-gradient-to-b from-neutral-300/25 from-55% to-neutral-300/5 dark:from-neutral-500/20 dark:to-neutral-50/10",
     ]}
   >
-    <a href="/" class="font-bold"> HyprMotion </a>
-    <a href="https://github.com/hyprwm/Hyprland" class="font-semibold" target="_blank" rel="noopener noreferrer">
+    <a href={base} class="font-bold"> HyprMotion </a>
+    <a
+      href="https://github.com/hyprwm/Hyprland"
+      class="font-semibold"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       Hyprland
     </a>
-    <a href="https://github.com/HarshNarayanJha/HyprMotion" target="_blank" rel="noopener noreferrer"> GitHub </a>
+    <a
+      href="https://github.com/HarshNarayanJha/HyprMotion"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      GitHub
+    </a>
   </nav>
   <ColorThemeSwitcher />
 </div>

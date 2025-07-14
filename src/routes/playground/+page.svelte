@@ -1,5 +1,6 @@
 <script lang="ts">
 import { goto } from "$app/navigation"
+import { base } from "$app/paths"
 import Playground from "$components/Playground.svelte"
 import AnimationsColumn from "$components/playground/AnimationsColumn.svelte"
 import BeziersColumn from "$components/playground/BeziersColumn.svelte"
@@ -96,7 +97,7 @@ const onBezierNameChange = (oldName: string, newName: string) => {
     {/if}
   </div> -->
 
-  <Playground {config}/>
+  <Playground {config} />
 
   <AnimationsColumn
     bind:animations={config.animations}
@@ -114,15 +115,13 @@ const onBezierNameChange = (oldName: string, newName: string) => {
       <Dialog.Header>
         <Dialog.Title>Create a new config</Dialog.Title>
         <Dialog.Description>
-          Create a brand new Hyprland Animation config with HyprMotion! Or go
-          back to import your own config
+          Create a brand new Hyprland Animation config with HyprMotion! Or go back to import your
+          own config
         </Dialog.Description>
       </Dialog.Header>
       <Dialog.Footer>
-        <Button variant="link" onclick={() => goto("/")}>Go Back</Button>
-        <Button variant="default" onclick={() => createNewConfig()}>
-          Create ✨
-        </Button>
+        <Button variant="link" onclick={() => goto(`${base}`)}>Go Back</Button>
+        <Button variant="default" onclick={() => createNewConfig()}>Create ✨</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </Dialog.Root>

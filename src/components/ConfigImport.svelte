@@ -8,6 +8,7 @@ import { parseConfigFromText, parseConfigFromURL } from "$lib/configParser"
 import { config } from "$lib/global.svelte"
 import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
+import { base } from "$app/paths"
 
 let configText = $state<string>("")
 let configFiles = $state<FileList | undefined>(undefined)
@@ -25,9 +26,7 @@ let configUrlDisabled = $derived(
 
 let formElement = $state<HTMLFormElement | null>(null)
 
-async function submitConfig(
-  e: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },
-) {
+async function submitConfig(e: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
   e.preventDefault()
 
   processing = true
@@ -41,7 +40,7 @@ async function submitConfig(
     }
     config.animations = parsedConfig.animations
     config.beziers = parsedConfig.beziers
-    goto("/playground")
+    goto(`${base}/playground`)
   } else if (configTextDisabled && configFilesDisabled) {
     const parsedConfig = await parseConfigFromURL(configUrl)
     if (parsedConfig === null) {
@@ -57,7 +56,7 @@ async function submitConfig(
     }
     config.animations = parsedConfig.animations
     config.beziers = parsedConfig.beziers
-    goto("/playground")
+    goto(`${base}/playground`)
   } else {
     resetForm()
     return
@@ -69,7 +68,11 @@ const resetForm = () => {
 }
 </script>
 
-<form class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 xl:px-24" onsubmit={submitConfig} bind:this={formElement}>
+<form
+  class="mx-4 grid grid-cols-[1fr_0.1fr_1fr] gap-4 xl:px-24"
+  onsubmit={submitConfig}
+  bind:this={formElement}
+>
   <div class="m-auto p-8">
     <h2 class="text-xl font-semibold">Paste your animation config</h2>
     <p class="prose prose-sm dark:prose-invert">
@@ -93,7 +96,8 @@ const resetForm = () => {
   <div class="m-auto p-8">
     <h2 class="text-xl font-semibold">Import from file</h2>
     <p class="prose prose-sm dark:prose-invert">
-      Upload your <code>~/.config/hypr/hyprland.conf</code> or any other conf file containing exactly one
+      Upload your <code>~/.config/hypr/hyprland.conf</code> or any other conf file containing
+      exactly one
       <code>animations</code> block
     </p>
 
@@ -107,18 +111,28 @@ const resetForm = () => {
         >
           {#if !configFiles || configFiles.length === 0}
             <div class="pt-5 pb-6">
-              <Icon icon="material-symbols:upload-file" class="m-auto mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" />
+              <Icon
+                icon="material-symbols:upload-file"
+                class="m-auto mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+              />
               <p class="mb-2 text-center text-sm text-gray-500 dark:text-gray-400">
                 <span class="font-semibold">Click to upload</span>
                 <!-- -- or drag and drop -->
               </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Hyprland .conf files only (max 10KiB)</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                Hyprland .conf files only (max 10KiB)
+              </p>
             </div>
           {:else}
             <div class="pt-5 pb-6">
               <div class="flex flex-col items-center justify-center">
-                <Icon icon="lucide:file-check" class="mb-4 h-10 w-10 text-green-500 dark:text-green-400" />
-                <p class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">File loaded successfully!</p>
+                <Icon
+                  icon="lucide:file-check"
+                  class="mb-4 h-10 w-10 text-green-500 dark:text-green-400"
+                />
+                <p class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  File loaded successfully!
+                </p>
                 <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">
                   {configFiles.item(0)?.name}
                 </p>
@@ -127,7 +141,9 @@ const resetForm = () => {
                 </p>
                 <div class="mt-3 rounded-lg px-3 py-2">
                   <p class="text-center text-xs text-gray-600 dark:text-gray-300">
-                    Loaded by mistake? Don't worry — <span class="font-semibold"> click again </span> to load another
+                    Loaded by mistake? Don't worry — <span class="font-semibold">
+                      click again
+                    </span> to load another
                   </p>
                 </div>
                 <button
@@ -158,7 +174,8 @@ const resetForm = () => {
 
     <h2 class="text-xl font-semibold">Insert file URI</h2>
     <p class="prose prose-sm dark:prose-invert">
-      Provide the URI for your <code>hyprland.conf</code> or any other conf file containing exactly one
+      Provide the URI for your <code>hyprland.conf</code> or any other conf file containing exactly
+      one
       <code>animations</code> block. Can be a GitHub URI or a direct file URI
     </p>
     <Input
