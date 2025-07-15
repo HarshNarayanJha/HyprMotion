@@ -32,15 +32,19 @@ jobs:
         run: bun install
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        id: setup-pages
+        uses: actions/configure-pages@v5
         with:
           static_site_generator: sveltekit
 
       - name: Build
         run: bun run build
+        env:
+          BASE_PATH: ${{ steps.setup-pages.outputs.base_path }}
 
       - name: Upload Artifacts
-        uses: actions/upload-pages-artifact@v1
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "build/"
 
@@ -55,4 +59,4 @@ jobs:
     steps:
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4

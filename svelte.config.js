@@ -16,7 +16,7 @@ const config = {
       strict: true
     }),
     paths: {
-      base: process.argv.includes('dev') ? '' : '/hyprmotion'
+      base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
     },
     alias: {
       $components: "src/components",
