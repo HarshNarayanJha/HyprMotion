@@ -1,38 +1,30 @@
-# sv
+# HyprMotion
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Visualize [Hyprland](https://hypr.land/) animations with ease
 
-## Creating a project
+![Playground](./images/playground.png)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## What is this
 
-```bash
-# create a new project in the current directory
-npx sv create
+HyprMotion is a static web app that helps you design hyprland animations. It allows you to import your animation config, or create a new one from scratch.
+You can edit or add new bezier curves, and tweak each and every animation while visualizing how it really looks.
 
-# create a new project in my-app
-npx sv create my-app
-```
+## How to use
 
-## Developing
+Right now you can upload your `.conf` file containing exactly one animation block (or the first one will be read), or paste the content directly.
+After being implemented, you can paste a file url too. It will then open the Playground, where you can edit beziers, edit animations and preview them.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Tech Stack
 
-```bash
-npm run dev
+HyprMotion is built with [SvelteKit](https://svelte.dev/) and it works fully offline and on-device with absolutely no internet connections made after the first load (no telemetry, server storage etc).
+It is hosted on GitHub pages as a static website.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+> [!WARNING]
+> HyprMotion is still under heavy development, and some features may not be fully functional yet.
 
-## Building
+## Plans
 
-To create a production version of your app:
+Right now it barely displays window open/close animations with editable bezier curves. I want this to allow making your own curves easily (via graphs or maybe generative AI?).
+Eventually I want to support all hyprland animations (layers, workspaces etc.). Finally being able to export the created animation config.
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Maybe an online gallery to share animations, but that would require an server. Even if done, the main HyprMotion Playground would be fully local and on-device, only uploading would make an internet connection.
