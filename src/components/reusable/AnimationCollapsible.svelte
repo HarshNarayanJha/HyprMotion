@@ -7,13 +7,7 @@ import * as Select from "$lib/components/ui/select"
 import { Switch } from "$lib/components/ui/switch"
 import * as Tooltip from "$lib/components/ui/tooltip"
 import type { StyleParams } from "$lib/data"
-import type {
-  Animation,
-  AnimationName,
-  Bezier,
-  SpeedUnit,
-  Style,
-} from "$lib/types"
+import type { Animation, AnimationName, Bezier, SpeedUnit, Style } from "$lib/types"
 import Icon from "@iconify/svelte"
 import { slide } from "svelte/transition"
 
@@ -67,12 +61,8 @@ let speedValue = $derived.by(() => {
   }
 })
 
-let curve = $derived(
-  animation?.curve === "default" ? "default" : animation?.curve?.name,
-)
-let curveValue: Bezier | "default" = $derived(
-  beziers.find(b => b.name === curve) || "default",
-)
+let curve = $derived(animation?.curve === "default" ? "default" : animation?.curve?.name)
+let curveValue: Bezier | "default" = $derived(beziers.find((b) => b.name === curve) || "default")
 
 // TODO: if styleParam is undefined, broken
 // need to make style, styleName, styleParam if possible
@@ -152,8 +142,7 @@ function updateAnimation(what: "onoff" | "speed" | "curve" | "style" | "all") {
       onoff: enabled,
       speed: speedValue,
       curve: curveValue,
-      style:
-        style && styleParam ? formatStyleParam(style, styleParam) : undefined,
+      style: style && styleParam ? formatStyleParam(style, styleParam) : undefined,
     } as Animation
   }
 }
@@ -173,8 +162,15 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
     <!-- Animation Name -->
     <Tooltip.Provider delayDuration={50}>
       <Tooltip.Root>
-        <Tooltip.Trigger type="button" role="button" onclick={() => (open = enabled ? !open : false)}>
-          <span class="w-full cursor-pointer text-start font-medium {!enabled && 'text-muted-foreground bg-inherit'}">
+        <Tooltip.Trigger
+          type="button"
+          role="button"
+          onclick={() => (open = enabled ? !open : false)}
+        >
+          <span
+            class="w-full cursor-pointer text-start font-medium {!enabled &&
+              'text-muted-foreground bg-inherit'}"
+          >
             {an}
           </span>
         </Tooltip.Trigger>
@@ -207,7 +203,10 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
   </div>
 
   {#if open}
-    <div class="rounded-md bg-neutral-50/75 p-4 dark:bg-gray-950/75" transition:slide={{ duration: 200 }}>
+    <div
+      class="rounded-md bg-neutral-50/75 p-4 dark:bg-gray-950/75"
+      transition:slide={{ duration: 100 }}
+    >
       <Collapsible.Content>
         <div class="grid grid-cols-[1fr_2fr] gap-2">
           <!-- Speed Input -->
@@ -352,7 +351,9 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               {/if}
             {/if}
           {:else}
-            <p class="text-muted-foreground col-span-2 w-full text-xs">This animation does not supports styles</p>
+            <p class="text-muted-foreground col-span-2 w-full text-xs">
+              This animation does not supports styles
+            </p>
           {/if}
         </div>
       </Collapsible.Content>

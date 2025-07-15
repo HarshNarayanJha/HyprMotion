@@ -23,7 +23,7 @@ let activeGroup = $state<string>("Windows")
     <div class="m-auto grid h-[80%] w-[80%] place-content-stretch">
       {#if activeGroup === "Windows"}
         <div class="flex items-center justify-center">
-          <WindowMock animations={config.animations ?? {}} beziers={config.beziers ?? {}} />
+          <WindowMock animations={config.animations!} beziers={config.beziers!} />
         </div>
       {:else if activeGroup === "Layers"}
         <div class="flex w-full flex-row items-center justify-evenly">

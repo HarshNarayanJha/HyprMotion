@@ -178,6 +178,7 @@ const resetForm = () => {
       one
       <code>animations</code> block. Can be a GitHub URI or a direct file URI
     </p>
+    <p class="text-red-700 dark:text-red-300">Doesn't Work Right Now</p>
     <Input
       bind:value={configUrl}
       disabled={configUrlDisabled}

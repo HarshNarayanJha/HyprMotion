@@ -39,15 +39,12 @@ const onBezierNameChange = (oldName: string, newName: string) => {
     }
   })
 }
-
-// $inspect(config.animations).with(console.log)
-// $inspect(config.beziers).with(console.log)
 </script>
 
 <div class="flex flex-row items-center justify-between">
   <h1 class="text-4xl font-semibold">HyprMotion Playground</h1>
   <div class="flex flex-row gap-2">
-    <Button>Save</Button>
+    <!-- <Button>Save</Button> -->
     <Button onclick={showCreateNewConfigDialog}>Create New</Button>
   </div>
 </div>
@@ -61,41 +58,6 @@ const onBezierNameChange = (oldName: string, newName: string) => {
     onCreateNewConfig={showCreateNewConfigDialog}
     {onBezierNameChange}
   />
-
-  <!-- <div>
-    {#if config.animations !== null}
-      {#each Object.entries(config.animations) as [an, anim]}
-        <div>
-          <span>{an}</span>
-          <span>{anim.name}</span>
-          <span>{anim.onoff} </span>
-          <span>{anim.speed}</span>
-          <span>
-            {anim.curve === "default" ? "default" : anim.curve?.name}
-          </span>
-          <span>{anim.style}</span>
-        </div>
-      {/each}
-    {:else}
-      No Animations
-    {/if}
-    <hr />
-    <hr />
-    {#if config.beziers !== null}
-      {#each Object.entries(config.beziers) as [b, bz]}
-        <div>
-          <span>{b}</span>
-          <span>{bz.name}</span>
-          <span>{bz.x0} </span>
-          <span>{bz.y0}</span>
-          <span>{bz.x1}</span>
-          <span>{bz.y1}</span>
-        </div>
-      {/each}
-    {:else}
-      No Bezier Curves
-    {/if}
-  </div> -->
 
   <Playground {config} />
 
@@ -120,8 +82,8 @@ const onBezierNameChange = (oldName: string, newName: string) => {
         </Dialog.Description>
       </Dialog.Header>
       <Dialog.Footer>
-        <Button variant="link" onclick={() => goto(`${base}`)}>Go Back</Button>
-        <Button variant="default" onclick={() => createNewConfig()}>Create ✨</Button>
+        <Button variant="link" href={`${base}/`}>Go Back</Button>
+        <Button variant="default" onclick={createNewConfig}>Create ✨</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </Dialog.Root>

@@ -26,71 +26,83 @@ const windowAnimationNames = Object.keys(animationGroups.windows.animations)
 const fadeAnimationNames = Object.keys(animationGroups.fade.animations)
 
 let windowsAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return null
+  // TODO: find the default anim in hyprland source code
+  if (!animations)
+    return {
+      name: windowsAnimationName,
+      onoff: true,
+      curve: "default",
+      speed: 10,
+      style: "gnomed",
+    } as Animation
+
   const anim = animations[windowsAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return null
+
+  if (!anim || anim.onoff === false)
+    return {
+      name: windowsAnimationName,
+      onoff: true,
+      curve: "default",
+      speed: 10,
+      style: "gnomed",
+    } as Animation
 
   return anim
 })
 
 let windowsInAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return windowsAnim
+  if (!animations) return { ...windowsAnim, name: windowsInAnimationName } as Animation
+
   const anim = animations[windowsInAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return windowsAnim
+  if (!anim || anim.onoff === false)
+    return { ...windowsAnim, name: windowsInAnimationName } as Animation
 
   return anim
 })
 
 let windowsOutAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return windowsAnim
+  if (!animations) return { ...windowsAnim, name: windowsOutAnimationName } as Animation
+
   const anim = animations[windowsOutAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return windowsAnim
+  if (!anim || anim.onoff === false)
+    return { ...windowsAnim, name: windowsOutAnimationName } as Animation
 
   return anim
 })
 
 let windowsMoveAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return windowsAnim
+  if (!animations) return { ...windowsAnim, name: windowsMoveAnimationName } as Animation
+
   const anim = animations[windowsMoveAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return windowsAnim
+  if (!anim || anim.onoff === false)
+    return { ...windowsAnim, name: windowsMoveAnimationName } as Animation
 
   return anim
 })
 
 let fadeAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return null
+  if (!animations) return { name: "fade", onoff: true, curve: "default", speed: 10 } as Animation
   const anim = animations[fadeAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return null
+  if (!anim || anim.onoff === false)
+    return { name: "fade", onoff: true, curve: "default", speed: 10 } as Animation
 
   return anim
 })
 
 let fadeInAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return fadeAnim
+  if (!animations) return { ...fadeAnim, name: fadeInAnimationName } as Animation
+
   const anim = animations[fadeInAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return fadeAnim
+  if (!anim || anim.onoff === false) return { ...fadeAnim, name: fadeInAnimationName } as Animation
 
   return anim
 })
 
 let fadeOutAnim = $derived.by(() => {
-  // default anim
-  if (!animations) return fadeAnim
+  if (!animations) return { ...fadeAnim, name: fadeOutAnimationName } as Animation
+
   const anim = animations[fadeOutAnimationName]
-  // return the default animation
-  if (!anim || anim.onoff === false) return fadeAnim
+  if (!anim || anim.onoff === false) return { ...fadeAnim, name: fadeOutAnimationName } as Animation
 
   return anim
 })
@@ -268,8 +280,8 @@ const applyAnimation = (
       return
     }
 
-    console.log(windowKeyframes, windowTiming)
-    console.log(fadeKeyframes, fadeTiming)
+    // console.log(windowKeyframes, windowTiming)
+    // console.log(fadeKeyframes, fadeTiming)
 
     let windowAnimation: globalThis.Animation | null = null
     let fadeAnimation: globalThis.Animation | null = null
@@ -290,14 +302,14 @@ const applyAnimation = (
 
 const playOpen = () => {
   console.log("Opening Window")
-  applyAnimation(windowsInAnim!, "in")(windowRef as Element)
-  applyAnimation(fadeInAnim!, "in")(windowRef as Element)
+  applyAnimation(windowsInAnim, "in")(windowRef as Element)
+  applyAnimation(fadeInAnim, "in")(windowRef as Element)
 }
 
 const playClose = () => {
   console.log("Closing Window")
-  applyAnimation(windowsOutAnim!, "out")(windowRef as Element)
-  applyAnimation(fadeOutAnim!, "out")(windowRef as Element)
+  applyAnimation(windowsOutAnim, "out")(windowRef as Element)
+  applyAnimation(fadeOutAnim, "out")(windowRef as Element)
 }
 </script>
 
@@ -305,10 +317,10 @@ const playClose = () => {
   <div
     class="pointer-events-none h-[400px] w-[600px] rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={windowRef}
-    {@attach applyAnimation(windowsInAnim!, "in")}
-    {@attach applyAnimation(windowsOutAnim!, "out", true)}
-    {@attach applyAnimation(fadeInAnim!, "in")}
-    {@attach applyAnimation(fadeOutAnim!, "out", true)}
+    {@attach applyAnimation(windowsInAnim, "in")}
+    {@attach applyAnimation(windowsOutAnim, "out", true)}
+    {@attach applyAnimation(fadeInAnim, "in")}
+    {@attach applyAnimation(fadeOutAnim, "out", true)}
   >
     <!-- Window header -->
     <div
