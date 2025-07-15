@@ -16,7 +16,7 @@
         "bits-ui": "^2.8.8",
         "clsx": "^2.1.1",
         "formsnap": "^2.0.1",
-        "mode-watcher": "^1.0.8",
+        "mode-watcher": "^1.1.0",
         "svelte": "^5.34.7",
         "svelte-check": "^4.2.2",
         "svelte-sonner": "^1.0.5",
@@ -356,7 +356,7 @@
 
     "mkdirp": ["mkdirp@3.0.1", "", { "bin": { "mkdirp": "dist/cjs/src/bin.js" } }, "sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg=="],
 
-    "mode-watcher": ["mode-watcher@1.0.8", "", { "dependencies": { "runed": "^0.25.0", "svelte-toolbelt": "^0.7.1" }, "peerDependencies": { "svelte": "^5.27.0" } }, "sha512-1YIgYymrae0lhcG9zPS/YWOvcKsUbM4bLGIh+eXTUIput5+dEJifcmUgp8NSehSXGSwITH6jbSjNhGEIhE3k5Q=="],
+    "mode-watcher": ["mode-watcher@1.1.0", "", { "dependencies": { "runed": "^0.25.0", "svelte-toolbelt": "^0.7.1" }, "peerDependencies": { "svelte": "^5.27.0" } }, "sha512-mUT9RRGPDYenk59qJauN1rhsIMKBmWA3xMF+uRwE8MW/tjhaDSCCARqkSuDTq8vr4/2KcAxIGVjACxTjdk5C3g=="],
 
     "mri": ["mri@1.2.0", "", {}, "sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA=="],
 

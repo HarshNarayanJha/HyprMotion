@@ -14,7 +14,7 @@
     "bits-ui": "^2.8.8",
     "clsx": "^2.1.1",
     "formsnap": "^2.0.1",
-    "mode-watcher": "^1.0.8",
+    "mode-watcher": "^1.1.0",
     "svelte": "^5.34.7",
     "svelte-check": "^4.2.2",
     "svelte-sonner": "^1.0.5",
