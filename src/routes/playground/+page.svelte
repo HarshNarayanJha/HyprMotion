@@ -1,6 +1,5 @@
 <script lang="ts">
-import { goto } from "$app/navigation"
-import { base } from "$app/paths"
+import { resolve } from "$app/paths"
 import Playground from "$components/Playground.svelte"
 import AnimationsColumn from "$components/playground/AnimationsColumn.svelte"
 import BeziersColumn from "$components/playground/BeziersColumn.svelte"
@@ -82,7 +81,7 @@ const onBezierNameChange = (oldName: string, newName: string) => {
         </Dialog.Description>
       </Dialog.Header>
       <Dialog.Footer>
-        <Button variant="link" href={`${base}/`}>Go Back</Button>
+        <Button variant="link" href={resolve("/")}>Go Back</Button>
         <Button variant="default" onclick={createNewConfig}>Create ✨</Button>
       </Dialog.Footer>
     </Dialog.Content>

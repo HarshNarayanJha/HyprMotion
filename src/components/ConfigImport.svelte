@@ -8,7 +8,7 @@ import { parseConfigFromText, parseConfigFromURL } from "$lib/configParser"
 import { config } from "$lib/global.svelte"
 import Icon from "@iconify/svelte"
 import TransparentDivider from "./reusable/TransparentDivider.svelte"
-import { base } from "$app/paths"
+import { resolve } from "$app/paths"
 
 let configText = $state<string>("")
 let configFiles = $state<FileList | undefined>(undefined)
@@ -40,7 +40,7 @@ async function submitConfig(e: SubmitEvent & { currentTarget: EventTarget & HTML
     }
     config.animations = parsedConfig.animations
     config.beziers = parsedConfig.beziers
-    goto(`${base}/playground`)
+    goto(resolve("/playground"))
   } else if (configTextDisabled && configFilesDisabled) {
     const parsedConfig = await parseConfigFromURL(configUrl)
     if (parsedConfig === null) {
@@ -56,7 +56,7 @@ async function submitConfig(e: SubmitEvent & { currentTarget: EventTarget & HTML
     }
     config.animations = parsedConfig.animations
     config.beziers = parsedConfig.beziers
-    goto(`${base}/playground`)
+    goto(resolve("/playground"))
   } else {
     resetForm()
     return
