@@ -13,12 +13,12 @@ let { children } = $props()
 </svelte:head>
 
 <ModeWatcher defaultTheme={"light"} disableTransitions={false} />
-<Toaster position="bottom-left" richColors />
 
 <div>
   <Navbar />
 
   {@render children()}
 
+  <Toaster position="bottom-left" richColors />
   <Footer />
 </div>
