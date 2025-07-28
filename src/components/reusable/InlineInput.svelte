@@ -10,7 +10,9 @@ interface InlineInputProps {
   required?: boolean
   maxLength: number
   postLabel?: Snippet<[() => void]>
+  endLabel?: Snippet<[(name: string) => boolean]>
   onInputSubmit?: (oldValue: string, newValue: string) => string | undefined
+  onEndClick?: (name: string) => boolean
 }
 
 let {
@@ -21,7 +23,9 @@ let {
   required = true,
   maxLength,
   postLabel,
+  endLabel,
   onInputSubmit,
+  onEndClick,
 }: InlineInputProps = $props()
 
 let value = $state(initialValue)
@@ -83,8 +87,23 @@ const focus = (node: HTMLElement) => {
     Press <kbd>Enter</kbd> or click outside to accept, and <kbd>ESC</kbd> to reject
   </p>
 {:else}
-  <span onclick={edit} onkeydown={(e) => e.key === "Enter" && edit()} role="button" tabindex="0" class={labelClasses}>
-    {label}
-  </span>
-  {@render postLabel?.(edit)}
+  <div class="flex flex-row items-center justify-between gap-1">
+    <div class="flex flex-row items-center justify-start gap-1">
+      <span
+        onclick={edit}
+        onkeydown={(e) => e.key === "Enter" && edit()}
+        role="button"
+        tabindex="0"
+        class={labelClasses}
+      >
+        {label}
+      </span>
+
+      {@render postLabel?.(edit)}
+    </div>
+
+    {#if onEndClick !== undefined}
+      {@render endLabel?.(onEndClick)}
+    {/if}
+  </div>
 {/if}
