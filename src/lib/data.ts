@@ -116,7 +116,7 @@ export const animationGroups: Record<string, AnimationGroup> = {
   },
   zoom: {
     title: "Zoom",
-    icon: "carbon:zoom",
+    icon: "carbon:magnify",
     description: "Desktop zoom animations",
     animations: {
       zoomFactor: "Zoom Factor change animation",

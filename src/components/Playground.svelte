@@ -47,6 +47,11 @@ let activeGroup = $state<string>("Windows")
           <h3 class="font-bold">Workspaces</h3>
           <!-- <WorkspaceMock /> -->
         </div>
+      {:else if activeGroup === "Zoom"}
+        <div class="flex items-center justify-center">
+          <h3 class="font-bold">Zoom</h3>
+          <!-- <WorkspaceMock /> -->
+        </div>
       {/if}
     </div>
 
