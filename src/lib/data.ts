@@ -1,19 +1,19 @@
-import type { AnimationName, Style } from "./types"
+import type { AnimationName, Style } from "./types";
 
 export interface StyleParams {
-  type: "select" | "percentage"
-  options?: string[]
-  default?: number
-  description?: string
+  type: "select" | "percentage";
+  options?: string[];
+  default?: number;
+  description?: string;
 }
 
 export interface AnimationGroup {
-  title: string
-  icon?: string
-  description: string
-  animations: Record<AnimationName, string>
-  styles?: Style[] | Record<AnimationName, Style[]>
-  styleParams?: Record<string, StyleParams>
+  title: string;
+  icon?: string;
+  description: string;
+  animations: Record<AnimationName, string>;
+  styles?: Style[] | Record<AnimationName, Style[]>;
+  styleParams?: Record<string, StyleParams>;
 }
 
 export const animationGroups: Record<string, AnimationGroup> = {
@@ -71,6 +71,9 @@ export const animationGroups: Record<string, AnimationGroup> = {
       fadeLayers: "Layer opacity animations",
       fadeLayersIn: "Layer fade in",
       fadeLayersOut: "Layer fade out",
+      fadePopups: "Popups fade",
+      fadePopupsIn: "Popup fade in",
+      fadePopupsOut: "Popup fade out",
     } as Record<AnimationName, string>,
   },
   borders: {
@@ -111,4 +114,12 @@ export const animationGroups: Record<string, AnimationGroup> = {
       },
     },
   },
-}
+  zoom: {
+    title: "Zoom",
+    icon: "carbon:zoom",
+    description: "Desktop zoom animations",
+    animations: {
+      zoomFactor: "Zoom Factor change animation",
+    } as Record<AnimationName, string>,
+  },
+};
