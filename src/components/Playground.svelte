@@ -8,6 +8,7 @@ import WorkspaceMock from "$components/playground/WorkspaceMock.svelte"
 import TooltipMock from "$components/playground/TooltipMock.svelte"
 import ContextMenuMock from "$components/playground/ContextMenuMock.svelte"
 import * as Tooltip from "$lib/components/ui/tooltip"
+import LayerMock from "./playground/LayerMock.svelte"
 
 interface PlaygroundProps {
   config: Config
@@ -27,9 +28,8 @@ let activeGroup = $state<string>("Windows")
         </div>
       {:else if activeGroup === "Layers"}
         <div class="flex w-full flex-row items-center justify-evenly">
-          <h3 class="font-bold">Layers</h3>
-          <!-- <TooltipMock /> -->
-          <!-- <ContextMenuMock /> -->
+          <!-- <h3 class="font-bold">Layers</h3> -->
+          <LayerMock animations={config.animations!} beziers={config.beziers!} />
         </div>
       {:else if activeGroup === "Fade Effects"}
         <div class="flex items-center justify-center">
