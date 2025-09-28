@@ -152,6 +152,6 @@
       linear-gradient(to right, var(--grid-lines-color) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-lines-color) 1px, transparent 1px);
 
-    mask-image: linear-gradient(to bottom, white, transparent 45%);
+    mask-image: linear-gradient(to bottom, white, transparent 85%);
   }
 }

@@ -23,6 +23,8 @@ export type AnimationName =
   ///
   | "fadePopupsIn"
   | "fadePopupsOut"
+  ///
+  | "fadeDpms"
   //
   | "border"
   | "borderangle"
@@ -35,7 +37,8 @@ export type AnimationName =
   | "specialWorkspaceIn"
   | "specialWorkspaceOut"
   //
-  | "zoomFactor";
+  | "zoomFactor"
+  | "monitorAdded"
 
 export const animationNames = [
   "windows",
@@ -57,6 +60,7 @@ export const animationNames = [
   "fadePopups",
   "fadePopupsIn",
   "fadePopupsOut",
+  "fadeDpms",
   "border",
   "borderangle",
   "workspaces",
@@ -66,22 +70,23 @@ export const animationNames = [
   "specialWorkspaceIn",
   "specialWorkspaceOut",
   "zoomFactor",
-];
+  "monitorAdded",
+]
 
 export interface Bezier {
-  name: string;
-  x0: number;
-  y0: number;
-  x1: number;
-  y1: number;
+  name: string
+  x0: number
+  y0: number
+  x1: number
+  y1: number
 }
 
-type BaseStyle = "slide" | "popin" | "gnomed" | "fade" | "slidevert" | "slidefade" | "slidefadevert";
+type BaseStyle = "slide" | "popin" | "gnomed" | "fade" | "slidevert" | "slidefade" | "slidefadevert"
 
-export type SpeedUnit = "ds" | "ms" | "s";
-type SlideDirection = "left" | "right" | "top" | "bottom";
-type PopinPercentage = `${number}%`;
-type SlideFadePercentage = `${number}%`;
+export type SpeedUnit = "ds" | "ms" | "s"
+type SlideDirection = "left" | "right" | "top" | "bottom"
+type PopinPercentage = `${number}%`
+type SlideFadePercentage = `${number}%`
 
 export type Style =
   | BaseStyle
@@ -90,14 +95,14 @@ export type Style =
   | `slidefade ${SlideFadePercentage}`
   | `slidefadevert ${SlideFadePercentage}`
   | "once"
-  | "loop";
+  | "loop"
 
 interface AnimationBase {
-  name: AnimationName;
-  onoff: boolean;
-  speed?: number;
-  curve?: "default" | Bezier;
-  style?: Style;
+  name: AnimationName
+  onoff: boolean
+  speed?: number
+  curve?: "default" | Bezier
+  style?: Style
 }
 
 interface AnimationWithoutStyle extends AnimationBase {
@@ -114,23 +119,25 @@ interface AnimationWithoutStyle extends AnimationBase {
     | "fadePopups"
     | "fadePopupsIn"
     | "fadePopupsOut"
+    | "fadeDpms"
     | "border"
-    | "zoomFactor";
+    | "zoomFactor"
+    | "monitorAdded"
 }
 
 interface BorderAngleAnimation extends AnimationBase {
-  name: "borderangle";
-  style?: "once" | "loop";
+  name: "borderangle"
+  style?: "once" | "loop"
 }
 
 interface WindowsAnimation extends AnimationBase {
-  name: "windows" | "windowsIn" | "windowsOut" | "windowsMove";
-  style?: "slide" | "popin" | "gnomed" | `slide ${SlideDirection}` | `popin ${PopinPercentage}`;
+  name: "windows" | "windowsIn" | "windowsOut" | "windowsMove"
+  style?: "slide" | "popin" | "gnomed" | `slide ${SlideDirection}` | `popin ${PopinPercentage}`
 }
 
 interface LayersAnimation extends AnimationBase {
-  name: "layers" | "layersIn" | "layersOut";
-  style?: "slide" | "popin" | "fade" | `slide ${SlideDirection}`;
+  name: "layers" | "layersIn" | "layersOut"
+  style?: "slide" | "popin" | "fade" | `slide ${SlideDirection}`
 }
 
 interface WorkspacesAnimation extends AnimationBase {
@@ -140,8 +147,13 @@ interface WorkspacesAnimation extends AnimationBase {
     | "workspacesOut"
     | "specialWorkspace"
     | "specialWorkspaceIn"
-    | "specialWorkspaceOut";
-  style?: "slide" | "slidevert" | "fade" | `slidefade ${SlideFadePercentage}` | `slidefadevert ${SlideFadePercentage}`;
+    | "specialWorkspaceOut"
+  style?:
+    | "slide"
+    | "slidevert"
+    | "fade"
+    | `slidefade ${SlideFadePercentage}`
+    | `slidefadevert ${SlideFadePercentage}`
 }
 
 export type Animation =
@@ -149,4 +161,4 @@ export type Animation =
   | BorderAngleAnimation
   | WindowsAnimation
   | LayersAnimation
-  | WorkspacesAnimation;
+  | WorkspacesAnimation

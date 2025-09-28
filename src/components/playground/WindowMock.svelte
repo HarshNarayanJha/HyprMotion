@@ -214,7 +214,11 @@ const fadeAnimationStyle = (animation: Animation) => {
   }
 }
 
-const getAnimationStyle = (animation: Animation, what: "window" | "fade", dir: "in" | "out") => {
+const getAnimationStyle = (
+  animation: Animation,
+  what: "window" | "fade" | "move",
+  dir: "in" | "out" | undefined = undefined,
+) => {
   switch (what) {
     case "window": {
       const windowStyles = windowAnimationStyle(animation)
@@ -259,6 +263,29 @@ const getAnimationStyle = (animation: Animation, what: "window" | "fade", dir: "
       }
 
       return { fadeKeyframes, fadeTiming }
+    }
+    case "move": {
+      // style seems to have no effect on window move animation, so ignore for now
+      const moveStyles = windowAnimationStyle({ ...animation, style: undefined })
+      if (!moveStyles.css && !moveStyles.bezier) {
+        return { moveKeyframes: null, moveTiming: null }
+      }
+
+      const moveKeyframes: Keyframe[] = [{ ...moveStyles.css }]
+      moveKeyframes.push({ transform: "translate(0, 0)", easing: moveStyles.bezier })
+      moveKeyframes.push({ transform: "translate(-120px, 80px)", easing: moveStyles.bezier })
+      moveKeyframes.push({ transform: "translate(220px, -80px)", easing: moveStyles.bezier })
+      moveKeyframes.push({ transform: "translate(-100px, 180px)", easing: moveStyles.bezier })
+      moveKeyframes.push({ transform: "translate(-220px, -120px)", easing: moveStyles.bezier })
+      moveKeyframes.push({ transform: "translate(0, 0)", easing: moveStyles.bezier })
+
+      const moveTiming: KeyframeAnimationOptions = {
+        duration: (animation.speed ?? 10) * 100,
+        // easing: "linear",
+        fill: "forwards",
+      }
+
+      return { moveKeyframes, moveTiming }
     }
   }
 }
@@ -311,6 +338,15 @@ const playClose = () => {
   applyAnimation(windowsOutAnim, "out")(windowRef as Element)
   applyAnimation(fadeOutAnim, "out")(windowRef as Element)
 }
+
+const playMove = () => {
+  console.log("Moving Window")
+  const { moveKeyframes, moveTiming } = getAnimationStyle(windowsMoveAnim, "move")
+  console.log(moveKeyframes, moveTiming)
+  if (moveKeyframes && moveTiming) {
+    windowRef?.animate(moveKeyframes, moveTiming)
+  }
+}
 </script>
 
 <div class="flex flex-col items-center justify-center gap-8 overflow-clip">
@@ -324,16 +360,18 @@ const playClose = () => {
   >
     <!-- Window header -->
     <div
-      class="flex h-7 items-center space-x-2 rounded-t-lg border-b border-gray-200 bg-gray-100 px-3 dark:border-neutral-700/50 dark:bg-neutral-900/25"
+      class="flex h-7 items-center space-x-2 rounded-t-lg border-b border-gray-200 bg-gray-200 px-3 dark:border-neutral-700/50 dark:bg-neutral-700/50"
     >
-      <div class="h-3 w-3 rounded-full bg-neutral-700/75"></div>
+      <div class="h-3 w-3 rounded-full bg-neutral-600/75"></div>
       <div class="h-3 w-3 rounded-full bg-neutral-500/50"></div>
-      <div class="h-3 w-3 rounded-full bg-neutral-200/25"></div>
+      <div class="h-3 w-3 rounded-full bg-neutral-400/50"></div>
     </div>
 
     <!-- Window content -->
-    <div class="bg-grid h-full p-4">
-      <!-- <div class="text-gray-800 dark:text-gray-200">Window Content</div> -->
+    <div
+      class="bg-grid grid h-full w-full place-content-center bg-gray-200 p-4 dark:bg-neutral-900"
+    >
+      <!-- <Icon icon="lucide:app-window-mac" /> -->
     </div>
   </div>
   <div class="flex w-full flex-row items-center justify-evenly">
@@ -344,6 +382,10 @@ const playClose = () => {
     <Button onclick={playClose} variant="secondary">
       <Icon icon="lucide:circle-x" />
       Close
+    </Button>
+    <Button onclick={playMove} variant="secondary">
+      <Icon icon="lucide:move" />
+      Move
     </Button>
   </div>
 </div>
