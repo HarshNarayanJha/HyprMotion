@@ -4,7 +4,7 @@
   "devDependencies": {
     "@iconify/svelte": "^5.0.2",
     "@internationalized/date": "^3.9.0",
-    "@lucide/svelte": "^0.544.0",
+    "@lucide/svelte": "^0.545.0",
     "@sveltejs/adapter-auto": "^6.1.0",
     "@sveltejs/adapter-static": "^3.0.9",
     "@sveltejs/kit": "^2.43.5",
