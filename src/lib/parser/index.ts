@@ -1,10 +1,6 @@
-import {
-  animationNames,
-  type Animation,
-  type AnimationName,
-  type Bezier,
-  type Style,
-} from "$lib/types"
+import { animationNames } from "$lib/types"
+
+import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 
 interface ParsedAnimations {
   beziers: Record<string, Bezier>
@@ -58,14 +54,14 @@ export class HyprAnimationParser {
         }
       } catch (error) {
         throw new Error(
-          `Failed to parse line "${trimmedLine}": ${typeof error === "object" ? (error as Error).message : error}`,
+          `Failed to parse line "${trimmedLine}": ${typeof error === "object" ? (error as Error).message : error}`
         )
       }
     }
 
     return {
       beziers: Object.fromEntries(this.beziers),
-      animations: Object.fromEntries(this.animations),
+      animations: Object.fromEntries(this.animations)
     }
   }
 
@@ -100,7 +96,7 @@ export class HyprAnimationParser {
     const parts = this.splitConfigLine(line)
     if (parts.length < 5) {
       throw new Error(
-        "Invalid animation format. Expected: animation = NAME, ONOFF, SPEED, CURVE [,STYLE]",
+        "Invalid animation format. Expected: animation = NAME, ONOFF, SPEED, CURVE [,STYLE]"
       )
     }
 
@@ -158,7 +154,7 @@ export class HyprAnimationParser {
           case "slide":
             if (!["left", "right", "top", "bottom"].includes(param)) {
               throw new Error(
-                `Invalid slide direction: ${param}. Must be left, right, top, or bottom`,
+                `Invalid slide direction: ${param}. Must be left, right, top, or bottom`
               )
             }
             style = `slide ${param}` as Style
@@ -172,7 +168,7 @@ export class HyprAnimationParser {
             const popinPercent = Number.parseInt(popinMatch[1], 10)
             if (popinPercent < 0 || popinPercent > 100) {
               throw new Error(
-                `Invalid popin percentage: ${popinPercent}. Must be between 0 and 100`,
+                `Invalid popin percentage: ${popinPercent}. Must be between 0 and 100`
               )
             }
             style = `popin ${param}` as Style
@@ -188,7 +184,7 @@ export class HyprAnimationParser {
             const fadePercent = Number.parseInt(fadeMatch[1], 10)
             if (fadePercent < 0 || fadePercent > 100) {
               throw new Error(
-                `Invalid slide fade percentage: ${fadePercent}. Must be between 0 and 100`,
+                `Invalid slide fade percentage: ${fadePercent}. Must be between 0 and 100`
               )
             }
             style = `${baseStyle} ${param}` as Style
@@ -208,7 +204,7 @@ export class HyprAnimationParser {
       onoff,
       speed,
       curve: curve === "default" ? "default" : this.beziers.get(curve) || "default",
-      style,
+      style
     } as Animation)
   }
 
@@ -218,8 +214,8 @@ export class HyprAnimationParser {
   private splitConfigLine(line: string): string[] {
     return line
       .split(/[=,]/)
-      .map(part => part.trim())
-      .filter(part => part.length > 0)
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0)
   }
 
   /**
@@ -281,7 +277,7 @@ export class HyprAnimationParser {
       "fadeDpms",
       "border",
       "zoomFactor",
-      "monitorAdded",
+      "monitorAdded"
     ])
 
     if (noStyleAnimations.has(animation)) {
@@ -306,7 +302,7 @@ export class HyprAnimationParser {
         "workspacesOut",
         "specialWorkspace",
         "specialWorkspaceIn",
-        "specialWorkspaceOut",
+        "specialWorkspaceOut"
       ].includes(animation)
     ) {
       return workspaceStyles.has(style)

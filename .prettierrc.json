@@ -1,0 +1,44 @@
+{
+  "useTabs": false,
+  "singleQuote": false,
+  "trailingComma": "none",
+  "semi": false,
+  "bracketSameLine": true,
+  "printWidth": 100,
+  "svelteIndentScriptAndStyle": false,
+  "importOrder": [
+    "^\\$(?!lib/)",
+    "^@sveltejs/",
+    "",
+    "^\\$components/",
+    "^@ui/",
+    "",
+    "^\\$lib/",
+
+    "",
+    "^@",
+    "<THIRD_PARTY_MODULES>",
+    "",
+
+    "",
+    "^[.]",
+    "<TYPES>",
+
+    ""
+  ],
+
+  "plugins": [
+    "prettier-plugin-svelte",
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
+  "tailwindStylesheet": "./src/app.css",
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ]
+}

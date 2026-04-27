@@ -25,10 +25,10 @@ let {
   postLabel,
   endLabel,
   onInputSubmit,
-  onEndClick,
+  onEndClick
 }: InlineInputProps = $props()
 
-let value = $state(initialValue)
+let value = $derived(initialValue)
 let editing = $state(false)
 
 let label = $derived(value ? value : placeholder)
@@ -81,9 +81,8 @@ const focus = (node: HTMLElement) => {
     onkeydown={handleKey}
     maxlength={maxLength}
     use:focus
-    {required}
-  />
-  <p class="prose prose-sm dark:prose-invert px-2 py-2">
+    {required} />
+  <p class="prose prose-sm px-2 py-2 dark:prose-invert">
     Press <kbd>Enter</kbd> or click outside to accept, and <kbd>ESC</kbd> to reject
   </p>
 {:else}
@@ -94,8 +93,7 @@ const focus = (node: HTMLElement) => {
         onkeydown={(e) => e.key === "Enter" && edit()}
         role="button"
         tabindex="0"
-        class={labelClasses}
-      >
+        class={labelClasses}>
         {label}
       </span>
 

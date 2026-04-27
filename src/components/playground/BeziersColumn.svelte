@@ -1,13 +1,16 @@
 <script lang="ts">
 import InlineInput from "$components/reusable/InlineInput.svelte"
-import { Button } from "$lib/components/ui/button"
-import * as Card from "$lib/components/ui/card"
-import { Input } from "$lib/components/ui/input"
-import { Label } from "$lib/components/ui/label"
-import { Separator } from "$lib/components/ui/separator"
-import type { Bezier } from "$lib/types"
+
+import { Button } from "@ui/button"
+import * as Card from "@ui/card"
+import { Input } from "@ui/input"
+import { Label } from "@ui/label"
+import { Separator } from "@ui/separator"
+
 import Icon from "@iconify/svelte"
 import { toast } from "svelte-sonner"
+
+import type { Bezier } from "$lib/types"
 
 interface BeziersColumnProps {
   beziers: Record<string, Bezier> | null
@@ -18,7 +21,7 @@ interface BeziersColumnProps {
 let {
   beziers = $bindable(null),
   onCreateNewConfig,
-  onBezierNameChange,
+  onBezierNameChange
 }: BeziersColumnProps = $props()
 
 function bezierNameChange(oldName: string, newName: string) {
@@ -81,26 +84,27 @@ function deleteBezier(name: string) {
                 labelClasses="font-medium"
                 maxLength={32}
                 onInputSubmit={bezierNameChange}
-                onEndClick={deleteBezier}
-              >
+                onEndClick={deleteBezier}>
                 {#snippet postLabel(onclick)}
-                  <Icon icon="fe:edit" class="inline" width={16} height={16} {onclick} />
+                  <span title="Edit">
+                    <Icon icon="fe:edit" class="inline" width={16} height={16} {onclick} />
+                  </span>
                 {/snippet}
 
                 {#snippet endLabel(onclick)}
-                  <Icon
-                    icon="fe:trash"
-                    class="inline text-red-400"
-                    width={16}
-                    height={16}
-                    onclick={() => onclick(bz.name)}
-                  />
+                  <span title="Delete">
+                    <Icon
+                      icon="fe:trash"
+                      class="inline text-red-400"
+                      width={16}
+                      height={16}
+                      onclick={() => onclick(bz.name)} />
+                  </span>
                 {/snippet}
               </InlineInput>
 
               <div
-                class="mt-2 grid grid-cols-[1fr_3fr_1fr_3fr] items-center justify-items-end gap-2"
-              >
+                class="mt-2 grid grid-cols-[1fr_3fr_1fr_3fr] items-center justify-items-end gap-2">
                 <Label for="{bz.name}-x0">x0</Label>
                 <Input
                   name="{bz.name}-x0"
@@ -109,8 +113,7 @@ function deleteBezier(name: string) {
                   placeholder="x0"
                   type="number"
                   min={0}
-                  max={1}
-                />
+                  max={1} />
                 <Label for="{bz.name}-x1">x1</Label>
                 <Input
                   name="{bz.name}-x1"
@@ -119,8 +122,7 @@ function deleteBezier(name: string) {
                   placeholder="x1"
                   type="number"
                   min={0}
-                  max={1}
-                />
+                  max={1} />
                 <Label for="{bz.name}-y0">y0</Label>
                 <Input
                   name="{bz.name}-y0"
@@ -129,8 +131,7 @@ function deleteBezier(name: string) {
                   placeholder="y0"
                   type="number"
                   min={0}
-                  max={1}
-                />
+                  max={1} />
                 <Label for="{bz.name}-y1">y1</Label>
                 <Input
                   name="{bz.name}-y1"
@@ -139,8 +140,7 @@ function deleteBezier(name: string) {
                   placeholder="y1"
                   type="number"
                   min={0}
-                  max={1}
-                />
+                  max={1} />
               </div>
             </div>
           {:else}

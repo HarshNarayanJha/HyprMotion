@@ -4,9 +4,12 @@ import Playground from "$components/Playground.svelte"
 import AnimationsColumn from "$components/playground/AnimationsColumn.svelte"
 import BeziersColumn from "$components/playground/BeziersColumn.svelte"
 import TransparentDivider from "$components/reusable/TransparentDivider.svelte"
-import { Button } from "$lib/components/ui/button"
-import * as Dialog from "$lib/components/ui/dialog"
+
+import { Button } from "@ui/button"
+import * as Dialog from "@ui/dialog"
+
 import { config } from "$lib/global.svelte"
+
 import type { AnimationName } from "$lib/types"
 
 let showDialog = $state(!config.configLoaded)
@@ -33,7 +36,6 @@ const onBezierNameChange = (oldName: string, newName: string) => {
       anim.curve !== "default" &&
       anim.curve.name === oldName
     ) {
-      // biome-ignore lint/style/noNonNullAssertion: It literally exists since I use Objects.entries
       config.animations[an as AnimationName]!.curve = config.beziers[newName]
     }
   })
@@ -43,36 +45,34 @@ const onBezierNameChange = (oldName: string, newName: string) => {
 <div class="flex flex-row items-center justify-between">
   <h1 class="text-4xl font-semibold">HyprMotion Playground</h1>
   <div class="flex flex-row gap-2">
-    <!-- <Button>Save</Button> -->
-    <Button onclick={showCreateNewConfigDialog}>Create New</Button>
+    <Button title="Save current config to a file">Save</Button>
+    <Button
+      onclick={showCreateNewConfigDialog}
+      title="Create a new config, discarding any unsaved changes">Create New</Button>
   </div>
 </div>
 <TransparentDivider />
 
 <div
-  class="grid grid-cols-[1fr_2fr_1fr] items-start justify-items-stretch gap-0 xl:grid-cols-[1fr_3fr_1fr] xl:gap-0"
->
+  class="grid grid-cols-[1fr_2fr_1fr] items-start justify-items-stretch gap-0 xl:grid-cols-[1fr_3fr_1fr] xl:gap-0">
   <BeziersColumn
     bind:beziers={config.beziers}
     onCreateNewConfig={showCreateNewConfigDialog}
-    {onBezierNameChange}
-  />
+    {onBezierNameChange} />
 
   <Playground {config} />
 
   <AnimationsColumn
     bind:animations={config.animations}
     beziers={config.beziers}
-    onCreateNewConfig={showCreateNewConfigDialog}
-  />
+    onCreateNewConfig={showCreateNewConfigDialog} />
 
   <Dialog.Root bind:open={showDialog}>
     <Dialog.Content
-      class="sm:max-w-[425px]"
+      class="sm:max-w-108"
       onFocusOutside={(e) => e.preventDefault()}
       interactOutsideBehavior="ignore"
-      escapeKeydownBehavior="ignore"
-    >
+      escapeKeydownBehavior="ignore">
       <Dialog.Header>
         <Dialog.Title>Create a new config</Dialog.Title>
         <Dialog.Description>
@@ -82,7 +82,7 @@ const onBezierNameChange = (oldName: string, newName: string) => {
       </Dialog.Header>
       <Dialog.Footer>
         <Button variant="link" href={resolve("/")}>Go Back</Button>
-        <Button variant="default" onclick={createNewConfig}>Create ✨</Button>
+        <Button variant="default" onclick={createNewConfig}>Create</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </Dialog.Root>

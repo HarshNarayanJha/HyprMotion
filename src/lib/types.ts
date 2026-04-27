@@ -70,7 +70,7 @@ export const animationNames = [
   "specialWorkspaceIn",
   "specialWorkspaceOut",
   "zoomFactor",
-  "monitorAdded",
+  "monitorAdded"
 ]
 
 export interface Bezier {

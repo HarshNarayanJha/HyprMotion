@@ -15,11 +15,11 @@ export const parseConfigFromText = (text: string) => {
 
 export const parseConfigFromURL = async (url: string) => {
   // GitHub file URI
-  const matches = url.match(
-    /http[s]?:\/\/github.com\/(\w+)\/(\w+)\/(\w+)\.conf/,
-  )
+  const matches = url.match(/http[s]?:\/\/github.com\/(\w+)\/(\w+)\/(\w+)\.conf/)
   if (matches) {
     console.log(matches)
   }
-  return url
+
+  const parser = new HyprAnimationParser()
+  return parser.parse(url)
 }

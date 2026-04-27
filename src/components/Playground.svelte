@@ -1,14 +1,19 @@
 <script lang="ts">
-import { Button } from "$lib/components/ui/button"
-import { animationGroups } from "$lib/data"
-import type { Config } from "$lib/global.svelte"
-import Icon from "@iconify/svelte"
+import ContextMenuMock from "$components/playground/ContextMenuMock.svelte"
+import TooltipMock from "$components/playground/TooltipMock.svelte"
 import WindowMock from "$components/playground/WindowMock.svelte"
 import WorkspaceMock from "$components/playground/WorkspaceMock.svelte"
-import TooltipMock from "$components/playground/TooltipMock.svelte"
-import ContextMenuMock from "$components/playground/ContextMenuMock.svelte"
-import * as Tooltip from "$lib/components/ui/tooltip"
+
+import { Button } from "@ui/button"
+import * as Tooltip from "@ui/tooltip"
+
+import { animationGroups } from "$lib/data"
+
+import Icon from "@iconify/svelte"
+
 import LayerMock from "./playground/LayerMock.svelte"
+import type { AnimationGroupNames } from "$lib/data"
+import type { Config } from "$lib/global.svelte"
 
 interface PlaygroundProps {
   config: Config
@@ -16,7 +21,7 @@ interface PlaygroundProps {
 
 let { config }: PlaygroundProps = $props()
 
-let activeGroup = $state<string>("Windows")
+let activeGroup = $state<AnimationGroupNames>("Windows")
 </script>
 
 <main class="h-full max-h-[85svh] w-full">
@@ -63,8 +68,7 @@ let activeGroup = $state<string>("Windows")
               <Button
                 size="lg"
                 variant={activeGroup === anG.title ? "default" : "outline"}
-                onclick={() => (activeGroup = anG.title)}
-              >
+                onclick={() => (activeGroup = anG.title)}>
                 <Icon icon={anG.icon || "material-symbols:animation"} />
               </Button>
             </Tooltip.Trigger>

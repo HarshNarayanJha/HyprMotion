@@ -1,9 +1,12 @@
 <script lang="ts">
-import { Button } from "$lib/components/ui/button"
+import * as Avatar from "@ui/avatar"
+import { Button } from "@ui/button"
+
 import { animationGroups } from "$lib/data"
-import type { Animation, AnimationName, Bezier } from "$lib/types"
+
 import Icon from "@iconify/svelte"
-import * as Avatar from "$lib/components/ui/avatar"
+
+import type { Animation, AnimationName, Bezier } from "$lib/types"
 import type { Attachment } from "svelte/attachments"
 
 interface LayerMockProps {
@@ -34,7 +37,7 @@ let layersAnim = $derived.by(() => {
       onoff: true,
       curve: "default",
       speed: 10,
-      style: "fade",
+      style: "fade"
     } as Animation
 
   const anim = animations[layersAnimationName]
@@ -45,7 +48,7 @@ let layersAnim = $derived.by(() => {
       onoff: true,
       curve: "default",
       speed: 10,
-      style: "fade",
+      style: "fade"
     } as Animation
 
   return anim
@@ -103,12 +106,12 @@ let fadeLayersOutAnim = $derived.by(() => {
 
 const layerAnimationStyle = (
   animation: Animation,
-  autoSlide: "top" | "bottom" | "left" | "right" | undefined = undefined,
+  autoSlide: "top" | "bottom" | "left" | "right" | undefined = undefined
 ) => {
   if (!layerAnimationNames.includes(animation.name)) {
     return {
       bezier: null,
-      css: null,
+      css: null
     }
   }
 
@@ -128,36 +131,36 @@ const layerAnimationStyle = (
     return {
       bezier,
       css: {
-        transform: "initial",
-      },
+        transform: "initial"
+      }
     }
   } else if (thisAnimation.style === "slide top") {
     return {
       bezier,
       css: {
-        transform: "translateY(-100%)",
-      },
+        transform: "translateY(-100%)"
+      }
     }
   } else if (thisAnimation.style === "slide bottom") {
     return {
       bezier,
       css: {
-        transform: "translateY(100%)",
-      },
+        transform: "translateY(100%)"
+      }
     }
   } else if (thisAnimation.style === "slide left") {
     return {
       bezier,
       css: {
-        transform: "translateX(-100%)",
-      },
+        transform: "translateX(-100%)"
+      }
     }
   } else if (thisAnimation.style === "slide right") {
     return {
       bezier,
       css: {
-        transform: "translateX(100%)",
-      },
+        transform: "translateX(100%)"
+      }
     }
   }
 
@@ -167,16 +170,16 @@ const layerAnimationStyle = (
     return {
       bezier,
       css: {
-        transform: `scale(${match[1]}%)`,
-      },
+        transform: `scale(${match[1]}%)`
+      }
     }
   }
 
   return {
     bezier,
     css: {
-      transform: "initial",
-    },
+      transform: "initial"
+    }
   }
 }
 
@@ -184,7 +187,7 @@ const fadeLayerAnimationStyle = (animation: Animation) => {
   if (!fadeAnimationNames.includes(animation.name)) {
     return {
       bezier: null,
-      css: null,
+      css: null
     }
   }
 
@@ -196,8 +199,8 @@ const fadeLayerAnimationStyle = (animation: Animation) => {
   return {
     bezier,
     css: {
-      opacity: 0,
-    },
+      opacity: 0
+    }
   }
 }
 
@@ -205,7 +208,7 @@ const getAnimationStyle = (
   animation: Animation,
   what: "layer" | "fade",
   dir: "in" | "out" | undefined = undefined,
-  autoSlide: "top" | "bottom" | "left" | "right" | undefined = undefined,
+  autoSlide: "top" | "bottom" | "left" | "right" | undefined = undefined
 ) => {
   switch (what) {
     case "layer": {
@@ -225,7 +228,7 @@ const getAnimationStyle = (
       const layerTiming: KeyframeAnimationOptions = {
         duration: (animation.speed ?? 10) * 100,
         easing: layerStyles.bezier,
-        fill: "forwards",
+        fill: "forwards"
       }
 
       return { layerKeyframes, layerTiming }
@@ -247,7 +250,7 @@ const getAnimationStyle = (
       const fadeTiming: KeyframeAnimationOptions = {
         duration: (animation.speed ?? 10) * 100,
         easing: fadeStyles.bezier,
-        fill: "forwards",
+        fill: "forwards"
       }
 
       return { fadeKeyframes, fadeTiming }
@@ -259,7 +262,7 @@ const applyAnimation = (
   anim: Animation,
   dir: "in" | "out",
   autoSlide: "top" | "bottom" | "left" | "right" | undefined = undefined,
-  preventMountRun = false,
+  preventMountRun = false
 ): Attachment => {
   let firstRun = true
 
@@ -315,22 +318,18 @@ const playNotificationClose = () => {
 }
 </script>
 
-<div
-  class="relative flex h-[500px] w-full flex-col items-center justify-center gap-8 overflow-clip"
->
+<div class="relative flex h-125 w-full flex-col items-center justify-center gap-8 overflow-clip">
   <!-- Bar -->
   <div
-    class="pointer-events-none absolute top-0 h-[25px] w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none absolute top-0 h-6.25 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={barRef}
     {@attach applyAnimation(layersInAnim, "in", "top")}
     {@attach applyAnimation(layersOutAnim, "out", "top", true)}
     {@attach applyAnimation(fadeLayersInAnim, "in", "top")}
-    {@attach applyAnimation(fadeLayersOutAnim, "out", "top", true)}
-  >
+    {@attach applyAnimation(fadeLayersOutAnim, "out", "top", true)}>
     <!-- Bar content -->
     <div
-      class="grid h-full w-full grid-cols-3 content-center rounded-md bg-gray-200 p-4 text-xs dark:bg-neutral-900"
-    >
+      class="grid h-full w-full grid-cols-3 content-center rounded-md bg-gray-200 p-4 text-xs dark:bg-neutral-900">
       <span class="place-self-start">
         <span class="font-mono tracking-widest">1 2 3 4 | </span>
         HyprMotion
@@ -342,17 +341,15 @@ const playNotificationClose = () => {
 
   <!-- Notification -->
   <div
-    class="pointer-events-none absolute right-0 bottom-20 h-[50px] w-[200px] rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none absolute right-0 bottom-20 h-16 w-50 rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={notificationRef}
     {@attach applyAnimation(layersInAnim, "in", "right")}
     {@attach applyAnimation(layersOutAnim, "out", "right", true)}
     {@attach applyAnimation(fadeLayersInAnim, "in", "right")}
-    {@attach applyAnimation(fadeLayersOutAnim, "out", "right", true)}
-  >
+    {@attach applyAnimation(fadeLayersOutAnim, "out", "right", true)}>
     <!-- Notification content -->
     <div
-      class="grid h-full w-full grid-cols-[1fr_5fr] content-center gap-2 rounded-md bg-gray-200 p-1 dark:bg-neutral-900"
-    >
+      class="grid h-full w-full grid-cols-[1fr_5fr] content-center gap-2 rounded-md bg-gray-200 p-2 dark:bg-neutral-900">
       <Avatar.Root class="place-self-center">
         <Avatar.Image src="https://github.com/hyprwm.png" alt="@hyprwm"></Avatar.Image>
         <Avatar.Fallback>HL</Avatar.Fallback>

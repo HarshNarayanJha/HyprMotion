@@ -1,7 +1,7 @@
 import type {
   Animation,
   AnimationName,
-  Bezier,
+  Bezier
   // HyprMotionConfig,
 } from "$lib/types"
 

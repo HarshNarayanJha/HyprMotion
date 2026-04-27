@@ -7,8 +7,16 @@ export interface StyleParams {
   description?: string
 }
 
+export type AnimationGroupNames =
+  | "Windows"
+  | "Layers"
+  | "Fade Effects"
+  | "Borders"
+  | "Workspaces"
+  | "Zoom"
+
 export interface AnimationGroup {
-  title: string
+  title: AnimationGroupNames
   icon?: string
   description: string
   animations: Record<AnimationName, string>
@@ -25,20 +33,20 @@ export const animationGroups: Record<string, AnimationGroup> = {
       windows: "Global window animations",
       windowsIn: "Window opening animations",
       windowsOut: "Window closing animations",
-      windowsMove: "Window movement and resize",
+      windowsMove: "Window movement and resize"
     } as Record<AnimationName, string>,
     styles: ["slide", "popin", "gnomed"],
     styleParams: {
       slide: {
         type: "select",
-        options: ["left", "right", "top", "bottom"],
+        options: ["left", "right", "top", "bottom"]
       },
       popin: {
         type: "percentage",
         default: 80,
-        description: "Start scale percentage",
-      },
-    },
+        description: "Start scale percentage"
+      }
+    }
   },
   layers: {
     title: "Layers",
@@ -47,15 +55,15 @@ export const animationGroups: Record<string, AnimationGroup> = {
     animations: {
       layers: "Global layer animations",
       layersIn: "Layer opening animations",
-      layersOut: "Layer closing animations",
+      layersOut: "Layer closing animations"
     } as Record<AnimationName, string>,
     styles: ["slide", "popin", "fade"],
     styleParams: {
       slide: {
         type: "select",
-        options: ["left", "right", "top", "bottom"],
-      },
-    },
+        options: ["left", "right", "top", "bottom"]
+      }
+    }
   },
   fade: {
     title: "Fade Effects",
@@ -74,8 +82,8 @@ export const animationGroups: Record<string, AnimationGroup> = {
       fadePopups: "Popups fade",
       fadePopupsIn: "Popup fade in",
       fadePopupsOut: "Popup fade out",
-      fadeDpms: "Monitor Fade animations",
-    } as Record<AnimationName, string>,
+      fadeDpms: "Monitor Fade animations"
+    } as Record<AnimationName, string>
   },
   borders: {
     title: "Borders",
@@ -83,11 +91,11 @@ export const animationGroups: Record<string, AnimationGroup> = {
     description: "Border color and style transitions",
     animations: {
       border: "Border color transitions",
-      borderangle: "Border gradient angle animations",
+      borderangle: "Border gradient angle animations"
     } as Record<AnimationName, string>,
     styles: {
-      borderangle: ["once", "loop"],
-    } as Record<AnimationName, Style[]>,
+      borderangle: ["once", "loop"]
+    } as Record<AnimationName, Style[]>
   },
   workspaces: {
     title: "Workspaces",
@@ -99,21 +107,21 @@ export const animationGroups: Record<string, AnimationGroup> = {
       workspacesOut: "Workspace switching out",
       specialWorkspace: "Special workspace animations",
       specialWorkspaceIn: "Special workspace in",
-      specialWorkspaceOut: "Special workspace out",
+      specialWorkspaceOut: "Special workspace out"
     } as Record<AnimationName, string>,
     styles: ["slide", "slidevert", "fade", "slidefade", "slidefadevert"],
     styleParams: {
       slidefade: {
         type: "percentage",
         default: 20,
-        description: "Movement distance",
+        description: "Movement distance"
       },
       slidefadevert: {
         type: "percentage",
         default: 20,
-        description: "Movement distance",
-      },
-    },
+        description: "Movement distance"
+      }
+    }
   },
   zoom: {
     title: "Zoom",
@@ -121,7 +129,7 @@ export const animationGroups: Record<string, AnimationGroup> = {
     description: "Desktop zoom animations",
     animations: {
       zoomFactor: "Zoom Factor change animation",
-      monitorAdded: "New monitor animation, also the first launch animation",
-    } as Record<AnimationName, string>,
-  },
+      monitorAdded: "New monitor animation, also the first launch animation"
+    } as Record<AnimationName, string>
+  }
 }

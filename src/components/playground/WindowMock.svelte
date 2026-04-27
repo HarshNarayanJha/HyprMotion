@@ -1,8 +1,11 @@
 <script lang="ts">
-import { Button } from "$lib/components/ui/button"
+import { Button } from "@ui/button"
+
 import { animationGroups } from "$lib/data"
-import type { Animation, AnimationName, Bezier } from "$lib/types"
+
 import Icon from "@iconify/svelte"
+
+import type { Animation, AnimationName, Bezier } from "$lib/types"
 import type { Attachment } from "svelte/attachments"
 
 interface WindowMockProps {
@@ -13,6 +16,7 @@ interface WindowMockProps {
 let { animations, beziers }: WindowMockProps = $props()
 
 let windowRef = $state<HTMLDivElement>()
+let currentWindowState = $state<"open" | "closed">("closed")
 
 const windowsAnimationName: AnimationName = "windows"
 const windowsInAnimationName: AnimationName = "windowsIn"
@@ -33,7 +37,7 @@ let windowsAnim = $derived.by(() => {
       onoff: true,
       curve: "default",
       speed: 10,
-      style: "gnomed",
+      style: "gnomed"
     } as Animation
 
   const anim = animations[windowsAnimationName]
@@ -44,7 +48,7 @@ let windowsAnim = $derived.by(() => {
       onoff: true,
       curve: "default",
       speed: 10,
-      style: "gnomed",
+      style: "gnomed"
     } as Animation
 
   return anim
@@ -111,7 +115,7 @@ const windowAnimationStyle = (animation: Animation) => {
   if (!windowAnimationNames.includes(animation.name)) {
     return {
       bezier: null,
-      css: null,
+      css: null
     }
   }
 
@@ -124,8 +128,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "initial",
-      },
+        transform: "initial"
+      }
     }
   }
 
@@ -133,8 +137,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "translateY(-100%)",
-      },
+        transform: "translateY(-100%)"
+      }
     }
   }
 
@@ -142,8 +146,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "translateY(100%)",
-      },
+        transform: "translateY(100%)"
+      }
     }
   }
 
@@ -151,8 +155,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "translateX(-100%)",
-      },
+        transform: "translateX(-100%)"
+      }
     }
   }
 
@@ -160,8 +164,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "translateX(100%)",
-      },
+        transform: "translateX(100%)"
+      }
     }
   }
 
@@ -169,8 +173,8 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: "scale(0)",
-      },
+        transform: "scale(0)"
+      }
     }
   }
 
@@ -180,16 +184,16 @@ const windowAnimationStyle = (animation: Animation) => {
     return {
       bezier,
       css: {
-        transform: `scale(${match[1]}%)`,
-      },
+        transform: `scale(${match[1]}%)`
+      }
     }
   }
 
   return {
     bezier,
     css: {
-      transform: "initial",
-    },
+      transform: "initial"
+    }
   }
 }
 
@@ -197,7 +201,7 @@ const fadeAnimationStyle = (animation: Animation) => {
   if (!fadeAnimationNames.includes(animation.name)) {
     return {
       bezier: null,
-      css: null,
+      css: null
     }
   }
 
@@ -209,15 +213,15 @@ const fadeAnimationStyle = (animation: Animation) => {
   return {
     bezier,
     css: {
-      opacity: 0,
-    },
+      opacity: 0
+    }
   }
 }
 
 const getAnimationStyle = (
   animation: Animation,
   what: "window" | "fade" | "move",
-  dir: "in" | "out" | undefined = undefined,
+  dir: "in" | "out" | undefined = undefined
 ) => {
   switch (what) {
     case "window": {
@@ -237,7 +241,7 @@ const getAnimationStyle = (
       const windowTiming: KeyframeAnimationOptions = {
         duration: (animation.speed ?? 10) * 100,
         easing: windowStyles.bezier,
-        fill: "forwards",
+        fill: "forwards"
       }
 
       return { windowKeyframes, windowTiming }
@@ -259,7 +263,7 @@ const getAnimationStyle = (
       const fadeTiming: KeyframeAnimationOptions = {
         duration: (animation.speed ?? 10) * 100,
         easing: fadeStyles.bezier,
-        fill: "forwards",
+        fill: "forwards"
       }
 
       return { fadeKeyframes, fadeTiming }
@@ -282,7 +286,7 @@ const getAnimationStyle = (
       const moveTiming: KeyframeAnimationOptions = {
         duration: (animation.speed ?? 10) * 100,
         // easing: "linear",
-        fill: "forwards",
+        fill: "forwards"
       }
 
       return { moveKeyframes, moveTiming }
@@ -293,7 +297,7 @@ const getAnimationStyle = (
 const applyAnimation = (
   anim: Animation,
   dir: "in" | "out",
-  preventMountRun = false,
+  preventMountRun = false
 ): Attachment => {
   let firstRun = true
 
@@ -305,6 +309,12 @@ const applyAnimation = (
     if (firstRun && preventMountRun) {
       firstRun = false
       return
+    }
+
+    if (dir == "in") {
+      currentWindowState = "open"
+    } else if (dir == "out") {
+      currentWindowState = "closed"
     }
 
     // console.log(windowKeyframes, windowTiming)
@@ -333,6 +343,13 @@ const playOpen = () => {
   applyAnimation(fadeInAnim, "in")(windowRef as Element)
 }
 
+const ensureOpen = () => {
+  if (currentWindowState == "open") {
+    return
+  }
+  playOpen()
+}
+
 const playClose = () => {
   console.log("Closing Window")
   applyAnimation(windowsOutAnim, "out")(windowRef as Element)
@@ -340,6 +357,8 @@ const playClose = () => {
 }
 
 const playMove = () => {
+  ensureOpen()
+
   console.log("Moving Window")
   const { moveKeyframes, moveTiming } = getAnimationStyle(windowsMoveAnim, "move")
   console.log(moveKeyframes, moveTiming)
@@ -351,17 +370,15 @@ const playMove = () => {
 
 <div class="flex flex-col items-center justify-center gap-8 overflow-clip">
   <div
-    class="pointer-events-none h-[400px] w-[600px] rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none h-100 w-150 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={windowRef}
     {@attach applyAnimation(windowsInAnim, "in")}
     {@attach applyAnimation(windowsOutAnim, "out", true)}
     {@attach applyAnimation(fadeInAnim, "in")}
-    {@attach applyAnimation(fadeOutAnim, "out", true)}
-  >
+    {@attach applyAnimation(fadeOutAnim, "out", true)}>
     <!-- Window header -->
     <div
-      class="flex h-7 items-center space-x-2 rounded-t-lg border-b border-gray-200 bg-gray-200 px-3 dark:border-neutral-700/50 dark:bg-neutral-700/50"
-    >
+      class="flex h-7 items-center space-x-2 rounded-t-lg border-b border-gray-200 bg-gray-200 px-3 dark:border-neutral-700/50 dark:bg-neutral-700/50">
       <div class="h-3 w-3 rounded-full bg-neutral-600/75"></div>
       <div class="h-3 w-3 rounded-full bg-neutral-500/50"></div>
       <div class="h-3 w-3 rounded-full bg-neutral-400/50"></div>
@@ -369,8 +386,7 @@ const playMove = () => {
 
     <!-- Window content -->
     <div
-      class="bg-grid grid h-full w-full place-content-center bg-gray-200 p-4 dark:bg-neutral-900"
-    >
+      class="bg-grid grid h-full w-full place-content-center bg-gray-200 p-4 dark:bg-neutral-900">
       <!-- <Icon icon="lucide:app-window-mac" /> -->
     </div>
   </div>

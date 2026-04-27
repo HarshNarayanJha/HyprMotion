@@ -1,15 +1,18 @@
 <script lang="ts">
-import { buttonVariants } from "$lib/components/ui/button"
-import * as Collapsible from "$lib/components/ui/collapsible"
-import { Input } from "$lib/components/ui/input"
-import { Label } from "$lib/components/ui/label"
-import * as Select from "$lib/components/ui/select"
-import { Switch } from "$lib/components/ui/switch"
-import * as Tooltip from "$lib/components/ui/tooltip"
+import { buttonVariants } from "@ui/button"
+import * as Collapsible from "@ui/collapsible"
+import { Input } from "@ui/input"
+import { Label } from "@ui/label"
+import * as Select from "@ui/select"
+import { Switch } from "@ui/switch"
+import * as Tooltip from "@ui/tooltip"
+
+import Icon from "@iconify/svelte"
+import { linear, sineOut } from "svelte/easing"
+import { scale, slide } from "svelte/transition"
+
 import type { StyleParams } from "$lib/data"
 import type { Animation, AnimationName, Bezier, SpeedUnit, Style } from "$lib/types"
-import Icon from "@iconify/svelte"
-import { slide } from "svelte/transition"
 
 interface AnimationCollapsibleProps {
   an: string
@@ -26,7 +29,7 @@ let {
   styles = null,
   styleParams = null,
   animation = $bindable(null),
-  beziers,
+  beziers
 }: AnimationCollapsibleProps = $props()
 
 function formatStyleParam(s: string, p: string | number | undefined): Style {
@@ -142,7 +145,7 @@ function updateAnimation(what: "onoff" | "speed" | "curve" | "style" | "all") {
       onoff: enabled,
       speed: speedValue,
       curve: curveValue,
-      style: style && styleParam ? formatStyleParam(style, styleParam) : undefined,
+      style: style && styleParam ? formatStyleParam(style, styleParam) : undefined
     } as Animation
   }
 }
@@ -156,21 +159,18 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
     class={buttonVariants({
       variant: "ghost",
       size: "sm",
-      class: "flex w-full flex-row items-center justify-between gap-2 px-2",
-    })}
-  >
+      class: "flex w-full flex-row items-center justify-between gap-2 px-2"
+    })}>
     <!-- Animation Name -->
     <Tooltip.Provider delayDuration={50}>
       <Tooltip.Root>
         <Tooltip.Trigger
           type="button"
           role="button"
-          onclick={() => (open = enabled ? !open : false)}
-        >
+          onclick={() => (open = enabled ? !open : false)}>
           <span
             class="w-full cursor-pointer text-start font-medium {!enabled &&
-              'text-muted-foreground bg-inherit'}"
-          >
+              'bg-inherit text-muted-foreground'}">
             {an}
           </span>
         </Tooltip.Trigger>
@@ -188,15 +188,13 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
       id="{an}-enabled"
       name="{an}-enabled"
       bind:checked={enabled}
-      onCheckedChange={() => updateAnimation("onoff")}
-    />
+      onCheckedChange={() => updateAnimation("onoff")} />
 
     <button
       type="button"
       class="cursor-pointer disabled:bg-inherit"
       disabled={!enabled}
-      onclick={() => (open = enabled ? !open : false)}
-    >
+      onclick={() => (open = enabled ? !open : false)}>
       <Icon icon="lucide:chevrons-up-down" />
       <span class="sr-only">Toggle</span>
     </button>
@@ -205,8 +203,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
   {#if open}
     <div
       class="rounded-md bg-neutral-50/75 p-4 dark:bg-gray-950/75"
-      transition:slide={{ duration: 100 }}
-    >
+      transition:scale={{ duration: 200, opacity: 0, start: 0.95, easing: sineOut }}>
       <Collapsible.Content>
         <div class="grid grid-cols-[1fr_2fr] gap-2">
           <!-- Speed Input -->
@@ -219,18 +216,15 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               name="{an}-speed"
               min={0}
               bind:value={speed}
-              onchange={() => updateAnimation("speed")}
-            />
+              onchange={() => updateAnimation("speed")} />
             <!-- Speed Unit Selector -->
             <Select.Root
               type="single"
               name="{an}-speed-unit"
               bind:value={speedUnit}
-              onValueChange={() => updateAnimation("speed")}
-            >
+              onValueChange={() => updateAnimation("speed")}>
               <Select.Trigger
-                class="focus:border-ring absolute top-0 right-0 w-16 rounded-l-none bg-neutral-100 shadow-none"
-              >
+                class="absolute top-0 right-0 w-16 rounded-l-none bg-neutral-100 shadow-none focus:border-ring">
                 {speedUnit}
               </Select.Trigger>
               <Select.Content>
@@ -249,8 +243,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
             type="single"
             name="{an}-curve"
             bind:value={curve}
-            onValueChange={() => updateAnimation("curve")}
-          >
+            onValueChange={() => updateAnimation("curve")}>
             <Select.Trigger class="w-full">
               {curveTriggerContent}
             </Select.Trigger>
@@ -286,8 +279,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               onValueChange={(val: string) => {
                 handleStyleChange(val)
                 updateAnimation("style")
-              }}
-            >
+              }}>
               <Select.Trigger class="w-full">
                 {styleTriggerContent}
               </Select.Trigger>
@@ -312,8 +304,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                   type="single"
                   name="{an}-styleparam"
                   bind:value={styleParam as string}
-                  onValueChange={() => updateAnimation("style")}
-                >
+                  onValueChange={() => updateAnimation("style")}>
                   <Select.Trigger class="w-full">
                     {styleParamTriggerContent}
                   </Select.Trigger>
@@ -337,21 +328,19 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                     max={100}
                     defaultValue={sParams.default!}
                     bind:value={styleParam as number}
-                    onchange={() => updateAnimation("style")}
-                  />
+                    onchange={() => updateAnimation("style")} />
                   <div
-                    class="absolute top-0 right-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center dark:bg-neutral-950/50"
-                  >
+                    class="absolute top-0 right-0 flex h-full w-16 items-center justify-center rounded-md rounded-l-none border bg-neutral-100 text-center dark:bg-neutral-950/50">
                     %
                   </div>
                 </div>
-                <p class="prose dark:prose-invert col-span-2 text-end text-xs">
+                <p class="col-span-2 prose text-end text-xs dark:prose-invert">
                   {sParams.description!}
                 </p>
               {/if}
             {/if}
           {:else}
-            <p class="text-muted-foreground col-span-2 w-full text-xs">
+            <p class="col-span-2 w-full text-xs text-muted-foreground">
               This animation does not supports styles
             </p>
           {/if}

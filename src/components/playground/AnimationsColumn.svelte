@@ -1,11 +1,15 @@
 <script lang="ts">
 import AnimationCollapsible from "$components/reusable/AnimationCollapsible.svelte"
-import { Button } from "$lib/components/ui/button"
-import * as Card from "$lib/components/ui/card"
-import { Separator } from "$lib/components/ui/separator"
+
+import { Button } from "@ui/button"
+import * as Card from "@ui/card"
+import { Separator } from "@ui/separator"
+
 import { animationGroups } from "$lib/data"
-import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
+
 import Icon from "@iconify/svelte"
+
+import type { Animation, AnimationName, Bezier, Style } from "$lib/types"
 
 interface AnimationsColumnProps {
   animations: Partial<Record<AnimationName, Animation>> | null
@@ -13,15 +17,11 @@ interface AnimationsColumnProps {
   onCreateNewConfig?: () => void
 }
 
-let {
-  animations = $bindable(null),
-  beziers,
-  onCreateNewConfig,
-}: AnimationsColumnProps = $props()
+let { animations = $bindable(null), beziers, onCreateNewConfig }: AnimationsColumnProps = $props()
 
 function getStylesForAnimation(
   an: string,
-  styles: Style[] | Record<AnimationName, Style[]> | undefined,
+  styles: Style[] | Record<AnimationName, Style[]> | undefined
 ) {
   if (!styles) return null
   if (Array.isArray(styles)) return styles
@@ -62,8 +62,7 @@ const setAnimation = (an: string, anim: Animation | null) => {
                   width={22}
                   height={22}
                   class="inline"
-                  inline={true}
-                />
+                  inline={true} />
                 <span class="font-semibold tracking-wide">{anGroup.title}</span>
               </div>
               {#each Object.entries(anGroup.animations) as [an, description]}
@@ -71,14 +70,11 @@ const setAnimation = (an: string, anim: Animation | null) => {
 
                 <AnimationCollapsible
                   {an}
-                  bind:animation={
-                    () => getAnimation(an), (anim) => setAnimation(an, anim)
-                  }
+                  bind:animation={() => getAnimation(an), (anim) => setAnimation(an, anim)}
                   {description}
                   {styles}
                   styleParams={anGroup.styleParams || null}
-                  beziers={Object.values(beziers)}
-                />
+                  beziers={Object.values(beziers)} />
               {/each}
             </div>
           {/each}
@@ -94,9 +90,7 @@ const setAnimation = (an: string, anim: Animation | null) => {
       </div>
     </Card.Content>
     <Card.Footer>
-      <p class="text-xs">
-        Animations apply to things like window and workspace transitions
-      </p>
+      <p class="text-xs">Animations apply to things like window and workspace transitions</p>
     </Card.Footer>
   </Card.Root>
 </aside>

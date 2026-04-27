@@ -7,19 +7,40 @@ const config = {
   // for more information about preprocessors
   preprocess: vitePreprocess(),
 
+  compilerOptions: {
+    // Force runes mode for the project, except for libraries. Can be removed in svelte 6.
+    runes: ({ filename }) => (filename.split(/[/\\]/).includes("node_modules") ? undefined : true),
+  },
+
   kit: {
     adapter: adapter({
       pages: "build",
       assets: "build",
-      fallback: '404.html',
+      fallback: "404.html",
       precompress: false,
-      strict: true
+      strict: true,
     }),
     paths: {
-      base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+      base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
     },
     alias: {
       $components: "src/components",
+      "@/*": "./src/*",
+      "@ui/*": "./src/lib/components/ui/*",
+    },
+
+    typescript: {
+      config: config => ({
+        ...config,
+        include: config.include.concat(["src/**/*.ts", "*.ts"]),
+      }),
+    },
+  },
+  vitePlugin: {
+    inspector: {
+      toggleKeyCombo: "alt-x",
+      showToggleButton: "active",
+      toggleButtonPos: "bottom-right",
     },
   },
 }
