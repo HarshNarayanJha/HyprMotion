@@ -229,7 +229,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               </Select.Trigger>
               <Select.Content>
                 {#each speedUnits as su}
-                  <Select.Item value={su} label={su}>
+                  <Select.Item value={su} label={su} class="text-foreground!">
                     {su}
                   </Select.Item>
                 {/each}
@@ -251,7 +251,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               <Select.Group>
                 <Select.Label>User defined beziers</Select.Label>
                 {#each beziers as bz (bz.name)}
-                  <Select.Item value={bz.name} label={bz.name}>
+                  <Select.Item value={bz.name} label={bz.name} class="text-foreground!">
                     {bz.name}
                   </Select.Item>
                 {:else}
@@ -261,7 +261,7 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
               <Select.Group>
                 <Select.Label>Built In</Select.Label>
                 {#each beziersBuiltIn as bz (bz.name)}
-                  <Select.Item value={bz.name} label={bz.name}>
+                  <Select.Item value={bz.name} label={bz.name} class="text-foreground!">
                     {bz.name}
                   </Select.Item>
                 {/each}
@@ -284,11 +284,11 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                 {styleTriggerContent}
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value={""} label={"none"}>
+                <Select.Item value={""} label={"none"} class="text-foreground!">
                   {"none"}
                 </Select.Item>
                 {#each styles as st}
-                  <Select.Item value={st} label={st}>
+                  <Select.Item value={st} label={st} class="text-foreground!">
                     {st}
                   </Select.Item>
                 {/each}
@@ -309,9 +309,10 @@ const speedUnits: SpeedUnit[] = ["ds", "ms", "s"]
                     {styleParamTriggerContent}
                   </Select.Trigger>
                   <Select.Content>
-                    <Select.Item value={""} label={"auto"}>auto</Select.Item>
+                    <Select.Item value={""} label={"auto"} class="text-foreground!"
+                      >auto</Select.Item>
                     {#each sParams.options! as spOp}
-                      <Select.Item value={spOp} label={spOp}>
+                      <Select.Item value={spOp} label={spOp} class="text-foreground!">
                         {spOp}
                       </Select.Item>
                     {/each}

@@ -20,8 +20,11 @@ import { resetMode, setMode } from "mode-watcher"
   </DropdownMenu.Trigger>
 
   <DropdownMenu.Content align="end" class="w-16">
-    <DropdownMenu.Item onclick={() => setMode("light")}>Light</DropdownMenu.Item>
-    <DropdownMenu.Item onclick={() => setMode("dark")}>Dark</DropdownMenu.Item>
-    <DropdownMenu.Item onclick={() => resetMode()}>System</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => setMode("light")} class="text-foreground!"
+      >Light</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => setMode("dark")} class="text-foreground!"
+      >Dark</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => resetMode()} class="text-foreground!"
+      >System</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>
