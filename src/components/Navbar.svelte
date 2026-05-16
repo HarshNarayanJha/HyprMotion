@@ -21,17 +21,11 @@ let isHomePage = $derived(page.url.pathname === resolve("/"))
     style="--radius: 4rem;"
     class={[
       "col-start-2 flex max-w-150 flex-row items-center justify-evenly gap-18  rounded-3xl px-6 py-2 backdrop-blur-md",
-      "border border-t-2 border-b-0 border-neutral-300/50 bg-linear-to-b from-neutral-300/25 from-55% to-neutral-300/5 dark:from-neutral-500/20 dark:to-neutral-50/10"
+      "border border-t-2 border-b-0 border-neutral-300/50 bg-linear-to-b from-neutral-300/25 from-55% to-neutral-400/5 dark:from-neutral-500/20 dark:to-neutral-50/10"
     ]}>
     <a href={resolve("/")} class="font-bold"> HyprMotion </a>
-    <a href="https://hypr.land" class="font-semibold" target="_blank" rel="noopener noreferrer">
-      Hyprland
-    </a>
-    <a
-      class="font-semibold"
-      href="https://github.com/HarshNarayanJha/HyprMotion"
-      target="_blank"
-      rel="noopener noreferrer">
+    <a href="https://hypr.land" class="font-semibold" target="_blank"> Hyprland </a>
+    <a class="font-semibold" href="https://github.com/HarshNarayanJha/HyprMotion" target="_blank">
       GitHub
     </a>
   </nav>

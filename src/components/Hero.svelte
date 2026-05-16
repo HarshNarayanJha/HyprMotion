@@ -26,7 +26,8 @@ const handleScroll = () => {
 <section class="min-h-svh w-full text-center">
   <div class="h-[12svh] md:h-[28svh] xl:h-[32svh]"></div>
   <h1 class="text-9xl leading-8 font-bold">HyprMotion</h1>
-  <p class="translate-z-20 text-2xl font-semibold text-hyprland text-shadow-black text-shadow-lg">
+  <p
+    class="translate-z-20 text-2xl font-semibold text-hyprland text-shadow-black/50 text-shadow-lg">
     Visualize Hyprland Animations with ease
   </p>
 

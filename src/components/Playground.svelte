@@ -1,8 +1,6 @@
 <script lang="ts">
-import ContextMenuMock from "$components/playground/ContextMenuMock.svelte"
-import TooltipMock from "$components/playground/TooltipMock.svelte"
+import LayerMock from "$components/playground/LayerMock.svelte"
 import WindowMock from "$components/playground/WindowMock.svelte"
-import WorkspaceMock from "$components/playground/WorkspaceMock.svelte"
 
 import { Button } from "@ui/button"
 import * as Tooltip from "@ui/tooltip"
@@ -11,7 +9,7 @@ import { animationGroups } from "$lib/data"
 
 import Icon from "@iconify/svelte"
 
-import LayerMock from "./playground/LayerMock.svelte"
+import FadeMock from "./playground/FadeMock.svelte"
 import type { AnimationGroupNames } from "$lib/data"
 import type { Config } from "$lib/global.svelte"
 
@@ -33,13 +31,12 @@ let activeGroup = $state<AnimationGroupNames>("Windows")
         </div>
       {:else if activeGroup === "Layers"}
         <div class="flex w-full flex-row items-center justify-evenly">
-          <!-- <h3 class="font-bold">Layers</h3> -->
           <LayerMock animations={config.animations!} beziers={config.beziers!} />
         </div>
       {:else if activeGroup === "Fade Effects"}
-        <div class="flex items-center justify-center">
-          <!-- <WindowMock /> -->
-          <h3 class="font-bold">Fade</h3>
+        <div class="flex items-center justify-center gap-8">
+          <!-- <h3 class="font-bold">Fade</h3> -->
+          <FadeMock animations={config.animations!} beziers={config.beziers!} />
         </div>
       {:else if activeGroup === "Borders"}
         <div class="flex items-center justify-center">
@@ -68,7 +65,8 @@ let activeGroup = $state<AnimationGroupNames>("Windows")
               <Button
                 size="lg"
                 variant={activeGroup === anG.title ? "default" : "outline"}
-                onclick={() => (activeGroup = anG.title)}>
+                onclick={() => (activeGroup = anG.title)}
+                class={[activeGroup === anG.title && "rounded-expressive!"]}>
                 <Icon icon={anG.icon || "material-symbols:animation"} />
               </Button>
             </Tooltip.Trigger>

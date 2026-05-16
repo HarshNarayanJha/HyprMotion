@@ -391,15 +391,15 @@ const playMove = () => {
     </div>
   </div>
   <div class="flex w-full flex-row items-center justify-evenly">
-    <Button onclick={playOpen} variant="secondary">
+    <Button size="lg" onclick={playOpen} variant="secondary">
       <Icon icon="lucide:mouse-pointer-click" />
       Open
     </Button>
-    <Button onclick={playClose} variant="secondary">
+    <Button size="lg" onclick={playClose} variant="secondary">
       <Icon icon="lucide:circle-x" />
       Close
     </Button>
-    <Button onclick={playMove} variant="secondary">
+    <Button size="lg" onclick={playMove} variant="secondary">
       <Icon icon="lucide:move" />
       Move
     </Button>

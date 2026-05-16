@@ -146,7 +146,7 @@ function deleteBezier(name: string) {
           {:else}
             <div class="my-16 space-y-4 text-center text-sm">
               <p>No Bezier curves defined in config</p>
-              <Button size="sm" onclick={addBezier}>
+              <Button size="sm" onclick={addBezier} class="expressive">
                 <Icon icon="material-symbols:add-circle" />
                 Add
               </Button>
@@ -165,7 +165,7 @@ function deleteBezier(name: string) {
       {:else}
         <div class="my-16 space-y-4 text-center text-sm">
           <p>No config loaded</p>
-          <Button size="sm" onclick={() => onCreateNewConfig?.()}>
+          <Button size="sm" onclick={() => onCreateNewConfig?.()} class="expressive">
             <Icon icon="material-symbols:add-circle" />
             Create New
           </Button>

@@ -138,28 +138,28 @@ const layerAnimationStyle = (
     return {
       bezier,
       css: {
-        transform: "translateY(-100%)"
+        transform: "translateY(-250%)"
       }
     }
   } else if (thisAnimation.style === "slide bottom") {
     return {
       bezier,
       css: {
-        transform: "translateY(100%)"
+        transform: "translateY(250%)"
       }
     }
   } else if (thisAnimation.style === "slide left") {
     return {
       bezier,
       css: {
-        transform: "translateX(-100%)"
+        transform: "translateX(-250%)"
       }
     }
   } else if (thisAnimation.style === "slide right") {
     return {
       bezier,
       css: {
-        transform: "translateX(100%)"
+        transform: "translateX(250%)"
       }
     }
   }
@@ -321,7 +321,7 @@ const playNotificationClose = () => {
 <div class="relative flex h-125 w-full flex-col items-center justify-center gap-8 overflow-clip">
   <!-- Bar -->
   <div
-    class="pointer-events-none absolute top-0 h-6.25 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none absolute top-0 h-6.25 w-full rounded-expressive border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={barRef}
     {@attach applyAnimation(layersInAnim, "in", "top")}
     {@attach applyAnimation(layersOutAnim, "out", "top", true)}
@@ -329,7 +329,7 @@ const playNotificationClose = () => {
     {@attach applyAnimation(fadeLayersOutAnim, "out", "top", true)}>
     <!-- Bar content -->
     <div
-      class="grid h-full w-full grid-cols-3 content-center rounded-md bg-gray-200 p-4 text-xs dark:bg-neutral-900">
+      class="grid h-full w-full grid-cols-3 content-center rounded-md bg-gray-200 p-4 text-xs shadow-lg dark:bg-neutral-900">
       <span class="place-self-start">
         <span class="font-mono tracking-widest">1 2 3 4 | </span>
         HyprMotion
@@ -341,7 +341,7 @@ const playNotificationClose = () => {
 
   <!-- Notification -->
   <div
-    class="pointer-events-none absolute right-0 bottom-20 h-16 w-50 rounded-md border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
+    class="pointer-events-none absolute right-0 bottom-20 m-4 h-16 w-56 rounded-expressive border border-gray-200 bg-white shadow-lg dark:border-neutral-700/50 dark:bg-neutral-800/25"
     bind:this={notificationRef}
     {@attach applyAnimation(layersInAnim, "in", "right")}
     {@attach applyAnimation(layersOutAnim, "out", "right", true)}
@@ -349,7 +349,7 @@ const playNotificationClose = () => {
     {@attach applyAnimation(fadeLayersOutAnim, "out", "right", true)}>
     <!-- Notification content -->
     <div
-      class="grid h-full w-full grid-cols-[1fr_5fr] content-center gap-2 rounded-md bg-gray-200 p-2 dark:bg-neutral-900">
+      class="grid h-full w-full grid-cols-[1fr_5fr] content-center gap-4 rounded-md bg-gray-200 p-2 dark:bg-neutral-900">
       <Avatar.Root class="place-self-center">
         <Avatar.Image src="https://github.com/hyprwm.png" alt="@hyprwm"></Avatar.Image>
         <Avatar.Fallback>HL</Avatar.Fallback>
@@ -362,22 +362,37 @@ const playNotificationClose = () => {
   </div>
 
   <!-- Controls -->
-  <div class="mt-auto flex w-full flex-row items-center justify-evenly">
-    <Button onclick={playBarOpen} variant="secondary">
+  <div class="mt-auto flex w-full flex-wrap justify-center gap-2">
+    <Button class="w-46" onclick={playBarOpen} variant="secondary">
       <Icon icon="lucide:mouse-pointer-click" />
       Show Bar
     </Button>
-    <Button onclick={playBarClose} variant="secondary">
+    <Button class="w-46" onclick={playBarClose} variant="secondary">
       <Icon icon="lucide:circle-x" />
       Hide Bar
     </Button>
-    <Button onclick={playNotificationOpen} variant="secondary">
+    <Button class="w-46" onclick={playNotificationOpen} variant="secondary">
       <Icon icon="lucide:mouse-pointer-click" />
       Show Notification
     </Button>
-    <Button onclick={playNotificationClose} variant="secondary">
+    <Button class="w-46" onclick={playNotificationClose} variant="secondary">
       <Icon icon="lucide:circle-x" />
       Hide Notification
+    </Button>
+
+    <Button
+      class="w-46"
+      onclick={() => (playBarOpen(), playNotificationOpen())}
+      variant="secondary">
+      <Icon icon="lucide:mouse-pointer-click" />
+      Show Both
+    </Button>
+    <Button
+      class="w-46"
+      onclick={() => (playBarClose(), playNotificationClose())}
+      variant="secondary">
+      <Icon icon="lucide:circle-x" />
+      Hide Both
     </Button>
   </div>
 </div>

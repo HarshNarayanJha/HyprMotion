@@ -81,7 +81,7 @@ const setAnimation = (an: string, anim: Animation | null) => {
         {:else}
           <div class="my-16 space-y-4 text-center text-sm">
             <p>No config loaded</p>
-            <Button size="sm" onclick={() => onCreateNewConfig?.()}>
+            <Button size="sm" onclick={() => onCreateNewConfig?.()} class="expressive">
               <Icon icon="material-symbols:add-circle" />
               Create New
             </Button>

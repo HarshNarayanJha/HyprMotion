@@ -170,7 +170,7 @@ function clear() {
   </div>
 
   <Button
-    class="col-span-3 m-auto rounded-lg bg-hyprland/80 px-4 py-2 font-medium text-black hover:bg-hyprland/90"
+    class="col-span-3 m-auto rounded-lg bg-hyprland/80 px-4 py-2 font-medium hover:bg-hyprland/90"
     variant="default"
     size="lg"
     disabled={!canSubmit || processing}

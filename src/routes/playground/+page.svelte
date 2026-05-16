@@ -45,8 +45,9 @@ const onBezierNameChange = (oldName: string, newName: string) => {
 <div class="flex flex-row items-center justify-between">
   <h1 class="text-4xl font-semibold">HyprMotion Playground</h1>
   <div class="flex flex-row gap-2">
-    <Button title="Save current config to a file">Save</Button>
+    <Button class="expressive" title="Save current config to a file" disabled>Save</Button>
     <Button
+      class="expressive"
       onclick={showCreateNewConfigDialog}
       title="Create a new config, discarding any unsaved changes">Create New</Button>
   </div>
@@ -82,7 +83,7 @@ const onBezierNameChange = (oldName: string, newName: string) => {
       </Dialog.Header>
       <Dialog.Footer>
         <Button variant="link" href={resolve("/")}>Go Back</Button>
-        <Button variant="default" onclick={createNewConfig}>Create</Button>
+        <Button class="expressive" variant="default" onclick={createNewConfig}>Create</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </Dialog.Root>
