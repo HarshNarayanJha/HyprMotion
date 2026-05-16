@@ -14,6 +14,9 @@ You can edit or add new bezier curves, and tweak each and every animation while 
 Right now you can upload your `.conf` file containing exactly one animation block (or the first one will be read), or paste the content directly.
 After being implemented, you can paste a file url too. It will then open the Playground, where you can edit beziers, edit animations and preview them.
 
+> [!WARNING]
+> Support for Lua config format is under development.
+
 ## Tech Stack
 
 HyprMotion is built with [SvelteKit](https://svelte.dev/) and it works fully offline and on-device with absolutely no internet connections made after the first load (no telemetry, server storage etc).
